@@ -49,6 +49,9 @@
     <Compile Include="serie1\ex3Pyramids.cs" />
     <Compile Include="serie1\ex4Factorials.cs" />
     <Compile Include="serie1\ex2speakingClock.cs" />
+    <Compile Include="serie2\Ex3_Search.cs" />
+    <Compile Include="serie2\Ex2Morpion.cs" />
+    <Compile Include="serie2\ex1Atelier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
