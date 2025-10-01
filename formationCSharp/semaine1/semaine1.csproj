@@ -45,12 +45,22 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="serie1\ex1ElementaryOperations.cs" />
+    <Compile Include="serie1\ex3Pyramids.cs" />
+    <Compile Include="serie1\ex4Factorials.cs" />
+    <Compile Include="serie1\ex2speakingClock.cs" />
+    <Compile Include="serie2\Ex3_Search.cs" />
+    <Compile Include="serie2\Ex2Morpion.cs" />
+    <Compile Include="serie2\ex1Atelier.cs" />
+    <Compile Include="serie3\Ex1_AdministrativeTasks.cs" />
+    <Compile Include="serie3\Ex2_CesarCode.cs" />
+    <Compile Include="serie3\Ex3_MorseCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="serie1\" />
+    <Folder Include="serie1\serviceEx1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
