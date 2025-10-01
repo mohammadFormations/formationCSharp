@@ -182,16 +182,30 @@ namespace semaine1
 
                         Console.WriteLine(AdministrativeTasks.ChangeDate(reportNonSocialiste));*/
 
-            Cesar CesarMachine = new Cesar();
-            string chiffre = CesarMachine.CesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            string dechifre = CesarMachine.DecryptCesarCode(chiffre);
-            Console.WriteLine(chiffre);
-            Console.WriteLine(dechifre);
+            /* Cesar CesarMachine = new Cesar();
+             string chiffre = CesarMachine.CesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ");
+             string dechifre = CesarMachine.DecryptCesarCode(chiffre);
+             Console.WriteLine(chiffre);
+             Console.WriteLine(dechifre);
 
-            string chiffre1 = CesarMachine.GeneralCesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
-            string dechifre1 = CesarMachine.GeneralDecryptCesarCode(chiffre1, 5);
-            Console.WriteLine(chiffre1);
-            Console.WriteLine(dechifre1);
+             string chiffre1 = CesarMachine.GeneralCesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
+             string dechifre1 = CesarMachine.GeneralDecryptCesarCode(chiffre1, 5);
+             Console.WriteLine(chiffre1);
+             Console.WriteLine(dechifre1);*/
+
+            // code morse
+            string morseString = "===.=.===.=...===.===.===...===.=.=...=.....===.===...===.===.===...=.===.=...=.=.=...=";
+            Morse morse = new Morse();
+            Console.WriteLine(morse.LettersCount(morseString));
+            Console.WriteLine(morse.WordsCount(morseString));
+            Console.WriteLine(morse.MorseTranslation(morseString));
+
+
+            Console.WriteLine(morse.MorseEncryption("I AM MORSE LEGEND"));
+
+            Console.WriteLine(morse.EfficientMorseTranslation(morseString));
+
+
         }
 
         }
