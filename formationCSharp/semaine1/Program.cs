@@ -173,14 +173,25 @@ namespace semaine1
             */
 
             // socializer une date
-            Console.WriteLine(AdministrativeTasks.SocialiserUneDate("2001-03-04"));
+            /*            Console.WriteLine(AdministrativeTasks.SocialiserUneDate("2001-03-04"));
 
-            String reportNonSocialiste = @"
-                        qsdqsdqsdqsdqsd  01248-123-123-233232323-12  2001-12-03                        
-                        qdsdqdqsd
-                        ";
+                        String reportNonSocialiste = @"
+                                    qsdqsdqsdqsdqsd  01248-123-123-233232323-12  2001-12-03                        
+                                    qdsdqdqsd
+                                    ";
 
-            Console.WriteLine(AdministrativeTasks.ChangeDate(reportNonSocialiste));
+                        Console.WriteLine(AdministrativeTasks.ChangeDate(reportNonSocialiste));*/
+
+            Cesar CesarMachine = new Cesar();
+            string chiffre = CesarMachine.CesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            string dechifre = CesarMachine.DecryptCesarCode(chiffre);
+            Console.WriteLine(chiffre);
+            Console.WriteLine(dechifre);
+
+            string chiffre1 = CesarMachine.GeneralCesarCode("BONJOURABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
+            string dechifre1 = CesarMachine.GeneralDecryptCesarCode(chiffre1, 5);
+            Console.WriteLine(chiffre1);
+            Console.WriteLine(dechifre1);
         }
 
         }
