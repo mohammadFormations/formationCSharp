@@ -52,6 +52,9 @@
     <Compile Include="serie2\Ex3_Search.cs" />
     <Compile Include="serie2\Ex2Morpion.cs" />
     <Compile Include="serie2\ex1Atelier.cs" />
+    <Compile Include="serie3\Ex1_AdministrativeTasks.cs" />
+    <Compile Include="serie3\Ex2_CesarCode.cs" />
+    <Compile Include="serie3\Ex3_MorseCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

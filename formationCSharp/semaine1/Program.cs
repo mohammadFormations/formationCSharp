@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using Serie1;
 using Serie2;
+using Serie3;
 using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 
@@ -105,18 +106,81 @@ namespace semaine1
                         Console.WriteLine(resultat);*/
 
 
-/*            int[] tab3 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            int result = Search.LinearSearch(tab3, -5);
-            Console.WriteLine(result);
-            Console.WriteLine(Search.BinarySearch(tab3, 6));
-            Console.WriteLine(Search.BinarySearch(tab3, 3));
-            Console.WriteLine(Search.BinarySearch(tab3, 0));
-            Console.WriteLine(Search.BinarySearch(tab3, 9));*/
+            /*            int[] tab3 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                        int result = Search.LinearSearch(tab3, -5);
+                        Console.WriteLine(result);
+                        Console.WriteLine(Search.BinarySearch(tab3, 6));
+                        Console.WriteLine(Search.BinarySearch(tab3, 3));
+                        Console.WriteLine(Search.BinarySearch(tab3, 0));
+                        Console.WriteLine(Search.BinarySearch(tab3, 9));*/
+
+            /*String unsensored = "Hello afghanistan iraq bombe grande iraq ville londre berlin communists";
+            String[] prohibited = { "iraq", "ville", "sparta", "Ville" };
+            String clear = AdministrativeTasks.EliminateSeditiousThoughts(unsensored, prohibited);
+            Console.WriteLine(clear);*/
 
 
+            /*            // serie 3 exercice 1
+                        StringBuilder personalInfoStringBuilder = new StringBuilder();
+                        bool format;
+                        String[] chaines = new string[3];
 
+                        // cas valide
+                        string infoPers1 = personalInfoStringBuilder
+                            .Append("Mme ")
+                            .Append("    cesar   ")
+                            .Append("   dupont   ")
+                            .Append("02")
+                            .ToString();
+                        chaines[0] =  infoPers1;
+                        personalInfoStringBuilder.Clear();
+            *//*
+                        format = AdministrativeTasks.ControlFormat(infoPers1);
+                        Console.WriteLine(format);
+            *//*
 
+                        // cas errone age
+                        string infoPers2 = personalInfoStringBuilder
+                            .Append("Mme ")
+                            .Append("    cesar   ")
+                            .Append("   dupont   ")
+                            .Append("s2")
+                            .ToString();
 
+                        chaines[1] = infoPers2;
+                        personalInfoStringBuilder.Clear();
+            *//*
+                        format = AdministrativeTasks.ControlFormat(infoPers2);
+                        Console.WriteLine(format);
+            *//*
+
+                        // cas errone civilite
+                        string infoPers3 = personalInfoStringBuilder
+                            .Append("Mse ")
+                            .Append("    c1sar   ")
+                            .Append("   dupont   ")
+                            .Append("02")
+                            .ToString();
+
+                        chaines[2] = infoPers3;
+                        personalInfoStringBuilder.Clear();
+            *//*
+                        format = AdministrativeTasks.ControlFormat(infoPers3);
+                        Console.WriteLine(format);
+            *//*
+
+                        AdministrativeTasks.AffichageComplet(chaines);
+            */
+
+            // socializer une date
+            Console.WriteLine(AdministrativeTasks.SocialiserUneDate("2001-03-04"));
+
+            String reportNonSocialiste = @"
+                        qsdqsdqsdqsdqsd  01248-123-123-233232323-12  2001-12-03                        
+                        qdsdqdqsd
+                        ";
+
+            Console.WriteLine(AdministrativeTasks.ChangeDate(reportNonSocialiste));
         }
 
         }

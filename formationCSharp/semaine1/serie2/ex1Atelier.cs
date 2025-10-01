@@ -76,11 +76,14 @@ namespace Serie2
         {
             Console.Write(header);
             Console.Write('[');
-            foreach (int i in tab)
+            for(int i= 0; i < tab.Length - 1; i++)
             {
-                Console.Write(i);
-                Console.Write(' ');
+                Console.Write(tab[i]);
+                Console.Write(", ");
             }
+
+
+            if (tab.Length > 0) Console.Write(tab[tab.Length - 1]);
             Console.WriteLine(']');
         }
 

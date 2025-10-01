@@ -62,7 +62,6 @@ namespace Serie2
                     {0, 0, 1}, {0, 1, 0}, {1, 0, 0}
                 }
             };
-            //TODO
             for (int i = 0; i < masques_gagnants.GetLength(0); i++)
             {
                 int resultat = ScalMatrcies(grille, masques_gagnants[i]);
