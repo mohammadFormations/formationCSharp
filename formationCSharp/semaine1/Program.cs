@@ -66,28 +66,28 @@ namespace semaine1
             /*
              * serie 2
              */
-            /*int[] tabs = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+/*            int[] tabs = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
 
             TasksTables.SommePrinter(tabs);
 
-            TasksTables.OperationPrinter(tabs, '+', 4);
+            TasksTables.OpeTab(tabs, '+', 4);
 
-            TasksTables.OperationPrinter(tabs, '-', 4);
+            TasksTables.OpeTab(tabs, '-', 4);
 
-            TasksTables.OperationPrinter(tabs, '*', 4);
+            TasksTables.OpeTab(tabs, '*', 4);
 
-            TasksTables.OperationPrinter(tabs, '/', 4);
+            TasksTables.OpeTab(tabs, '/', 4);
 
-            TasksTables.OperationPrinter(tabs, '/', 0);
+            TasksTables.OpeTab(tabs, '/', 0);
 
-            TasksTables.OperationPrinter(tabs, 'L', 6);
+            TasksTables.OpeTab(tabs, 'L', 6);
 
 
 
             int[] tab1 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             int[] tab2 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            TasksTables.PrintTab(tab1, header:"tab 1 : ");
-            TasksTables.PrintTab(tab2, header:"tab 2 : ");
+            TasksTables.PrintTab(tab1, header: "tab 1 : ");
+            TasksTables.PrintTab(tab2, header: "tab 2 : ");
             int[] concatinated = TasksTables.ConcatTab(tab1, tab2);
             TasksTables.PrintTab(concatinated, header: "tab 1 + tab 2 : ");
 

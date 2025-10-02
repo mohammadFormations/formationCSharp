@@ -20,11 +20,11 @@ namespace Serie1
         {
             for(int k=0; k < n; k++)
             {
-                afficheurLigne(k, n, isSmooth || k % 2 == 0);
+                DisplayLine(k, n, isSmooth || k % 2 == 0);
             }
         }
 
-        public static void afficheurLigne(int j, int n, bool plus)
+        public static void DisplayLine(int j, int n, bool plus)
         {
             char block = '+';
             if (!plus) block = '-';

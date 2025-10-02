@@ -11,8 +11,7 @@ namespace Serie2
         public static void SommePrinter(int[] tab)
         {
             Console.WriteLine("Somme des éléments d'un tableau :");
-            Console.Write("tab : ");
-            PrintTab(tab);
+            PrintTab(tab, "tab : ");
             Console.WriteLine("Somme : " + SumTab(tab));
         }
 
@@ -24,33 +23,33 @@ namespace Serie2
             return sum;
         }
 
-        public static void OperationPrinter(int[] tab, char operation, int b)
-        {
-            Console.WriteLine("Opération sur un tableau :");
-            Console.Write("tab : ");
-            PrintTab(tab);
-            Console.WriteLine("ope : " + operation + ' ' + b);
-            int[] tab2 = OpeTab(tab, operation, b);
-            Console.Write("res : ");
-            PrintTab(tab2);
-        }
         public static int[] OpeTab(int[] tab, char operation, int b)
         {
+            // affichage en tete et tableaux avant (side effect)
+            Console.WriteLine("Opération sur un tableau :");
+            PrintTab(tab, "tab : ");
+            Console.WriteLine("ope : " + operation + ' ' + b);
+
             switch (operation)
             {
                 case '+':
                     AddValue(tab, b);
+                    PrintTab(tab, "res : ");
                     return tab;
                 case '-':
                     SubValue(tab, b);
+                    PrintTab(tab, "res : ");
                     return tab;
                 case '*':
                     MulValue(tab, b);
+                    PrintTab(tab, "res : ");
                     return tab;
                 case char op when op == '/' && b != 0:
                     DivValue(tab, b);
+                    PrintTab(tab, "res : ");
                     return tab;
                 default:
+                    PrintTab(new int[0], "res : ");
                     return new int[0];
             }
         }
@@ -71,7 +70,11 @@ namespace Serie2
             return concatenated_array;
         }
 
-
+        /// <summary>
+        /// afficher un tableau avec un titre optionel
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="header"></param>
         public static void PrintTab(int[] tab, String header = "")
         {
             Console.Write(header);
@@ -88,6 +91,11 @@ namespace Serie2
         }
 
 
+        /// <summary>
+        /// addition tout les elements d'un tableau tab par une valeur b
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="b"></param>
         public static void AddValue(int[] tab, int b)
         {
             for (int i = 0; i < tab.Length; i++)
@@ -96,6 +104,11 @@ namespace Serie2
             }
         }
 
+        /// <summary>
+        /// soustrait tout les elements d'un tableau tab par une valeur b
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="b"></param>
         public static void SubValue(int[] tab, int b)
         {
             for (int i = 0; i < tab.Length; i++)
@@ -103,7 +116,11 @@ namespace Serie2
                 tab[i] -= b;
             }
         }
-
+        /// <summary>
+        /// multiplie tout les elements d'un tableau tab par une valeur b
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="b"></param>
         public static void MulValue(int[] tab, int b)
         {
             for (int i = 0; i < tab.Length; i++)
@@ -112,6 +129,11 @@ namespace Serie2
             }
         }
 
+        /// <summary>
+        /// divise tout les elements d'un tableau tab par une valeur b
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="b"></param>
         public static void DivValue(int[] tab, int b)
         {
             for (int i = 0; i < tab.Length; i++)
@@ -119,6 +141,5 @@ namespace Serie2
                 tab[i] /= b;
             }
         }
-
     }
 }

@@ -31,6 +31,13 @@ namespace Serie3
                 && IsStringAlphabetic(nom) && IsStringAlphabetic(prenom);
         }
 
+        /// <summary>
+        /// changer les format des dates dans un paragraphes pour etre en format socialiste
+        /// date a format originale: AAAA-MM-JJ
+        /// date formaté           : JJ.MM.AA
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
         public static string ChangeDate(string report)
         {
             int tailleDateSocialiste = 10;
@@ -49,17 +56,19 @@ namespace Serie3
 
                 } else
                 {
-
                     socializedReportBuilder.Append(report.Substring(i, 1));
                     i ++;
                 }
             }
-
-
             
             return socializedReportBuilder.ToString();
         }
 
+        /// <summary>
+        /// valider si une date a un format socialiste valide
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static bool isDateSocialisteValide(string date)
         {
             if (date.Length != 10) return false;
@@ -82,7 +91,11 @@ namespace Serie3
             return true;
         }
 
-
+        /// <summary>
+        /// reformater une date dans un format socialiste
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static string SocialiserUneDate(string date)
         {
             // date non socialiste aaaa-mm-jj
@@ -98,12 +111,23 @@ namespace Serie3
             return dateSocialiste;
         }
 
+
+        /// <summary>
+        /// valider la taille d'une chaine de caractères chaine qui est egale a taille
+        /// </summary>
+        /// <param name="chaine"></param>
+        /// <param name="taille"></param>
+        /// <returns></returns>
         public static bool IsTailleChaineValide( string chaine, int taille)
         {
             return chaine.Length == taille;
         }
 
-
+        /// <summary>
+        /// valider si une chaine de caractères est un nombre entier
+        /// </summary>
+        /// <param name="age"></param>
+        /// <returns></returns>
         public static bool IsStringValidNumber(string age)
         {
             foreach (char digit in age.ToCharArray())
@@ -117,6 +141,12 @@ namespace Serie3
             
         }
 
+
+        /// <summary>
+        /// valider la civilite socialiste
+        /// </summary>
+        /// <param name="civilite"></param>
+        /// <returns></returns>
         public static bool IsCiviliteValid(string civilite)
         {
             string[] civiliteAcceptables = new string[3] { "M.", "Mme", "Mlle" };
@@ -126,6 +156,12 @@ namespace Serie3
             }
             return false;
         }
+        
+        /// <summary>
+        /// valider un nom est alphabetique
+        /// </summary>
+        /// <param name="prenom"></param>
+        /// <returns></returns>
         public static bool IsPrenomValid(string prenom)
         {
             foreach (char letter in prenom.ToCharArray())
@@ -137,6 +173,12 @@ namespace Serie3
             }
             return true;
         }
+        
+        /// <summary>
+        /// valider si un string est alphabetic charactères entre A et Z ou a et z
+        /// </summary>
+        /// <param name="chaine"></param>
+        /// <returns></returns>
         public static bool IsStringAlphabetic(string chaine)
         {
             foreach (char letter in chaine.ToCharArray())
