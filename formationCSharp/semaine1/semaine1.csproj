@@ -55,6 +55,8 @@
     <Compile Include="serie3\Ex1_AdministrativeTasks.cs" />
     <Compile Include="serie3\Ex2_CesarCode.cs" />
     <Compile Include="serie3\Ex3_MorseCode.cs" />
+    <Compile Include="serie4\Ex1_ClassCouncil.cs" />
+    <Compile Include="serie4\Ex2_Morpion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Numerics;
 using Serie1;
 using Serie2;
-using Serie3;
 using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 
@@ -194,17 +193,23 @@ namespace semaine1
              Console.WriteLine(dechifre1);*/
 
             // code morse
-            string morseString = "===.=.===.=...===.===.===...===.=.=...=.....===.===...===.===.===...=.===.=...=.=.=...=";
-            Morse morse = new Morse();
-            Console.WriteLine(morse.LettersCount(morseString));
-            Console.WriteLine(morse.WordsCount(morseString));
-            Console.WriteLine(morse.MorseTranslation(morseString));
+            /*            string morseString = "===.=.===.=...===.===.===...===.=.=...=.....===.===...===.===.===...=.===.=...=.=.=...=";
+                        Morse morse = new Morse();
+                        Console.WriteLine(morse.LettersCount(morseString));
+                        Console.WriteLine(morse.WordsCount(morseString));
+                        Console.WriteLine(morse.MorseTranslation(morseString));
 
 
-            Console.WriteLine(morse.MorseEncryption("I AM MORSE LEGEND"));
+                        Console.WriteLine(morse.MorseEncryption("I AM MORSE LEGEND"));
 
-            Console.WriteLine(morse.EfficientMorseTranslation(morseString));
+                        Console.WriteLine(morse.EfficientMorseTranslation(morseString));
 
+            */
+
+            /*    ClassCouncil.SchoolMeans("notes.csv", "moyennes.csv");
+    */
+            Serie4.Morpion.MorpionGame();
+            
 
         }
 

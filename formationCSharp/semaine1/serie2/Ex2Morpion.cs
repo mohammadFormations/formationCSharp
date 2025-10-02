@@ -8,6 +8,7 @@ namespace Serie2
 {
     public static class Morpion
     {
+
         public static void DisplayMorpion(int[,] grille)
         {
             for (int i = 0; i < grille.GetLength(0); i++)
