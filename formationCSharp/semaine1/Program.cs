@@ -15,7 +15,6 @@ namespace semaine1
     {
 
 
-
         static void Main(string[] args)
         {
             /*           ElementaryOperations.BasicOperation(3, 4, '+');
