@@ -169,6 +169,7 @@ namespace Bataille_Navale
             }
 
             // placement
+            bool statusss = false;
             foreach (Bateau bateau in Bateaux)
             {
                 if (bateau.Taille == taille && bateau.Positions.Count == 0)
@@ -178,6 +179,7 @@ namespace Bataille_Navale
                         for (int i = x; i < x + taille; i++)
                         {
                             bateau.Positions.Add(new Position(i, y));
+                            statusss = true;
                         }
                     }
                     else
@@ -185,9 +187,11 @@ namespace Bataille_Navale
                         for (int j = y; j < y + taille; j++)
                         {
                             bateau.Positions.Add(new Position(x, j));
+                            statusss = true;
                         }
                     }
                 }
+                if (statusss) break;
             }
             return true;
         }
@@ -203,7 +207,9 @@ namespace Bataille_Navale
             {
                 foreach(Position position in bateau.Positions)
                 {
-                    if(position.X == x && position.Y == y)
+                    int posX = position.X;
+                    int posY = position.Y;
+                    if (posX == x && posY == y)
                     {
                         PlateauJeu[x, y].Touché();
                         CouleIfPossible(bateau);
