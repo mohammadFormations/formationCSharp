@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "semaine1", "semaine1\semaine1.csproj", "{D11D92F5-EEF5-4B5C-BE0C-650910A32A72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ex_sup", "ex_sup\ex_sup.csproj", "{2A7989BF-012E-4B20-9AFB-6B2A35C1CEFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatailleNavale", "BatailleNavale\BatailleNavale.csproj", "{E41E7878-E859-4804-AD5A-A03E3F70AD09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D11D92F5-EEF5-4B5C-BE0C-650910A32A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D11D92F5-EEF5-4B5C-BE0C-650910A32A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D11D92F5-EEF5-4B5C-BE0C-650910A32A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A7989BF-012E-4B20-9AFB-6B2A35C1CEFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7989BF-012E-4B20-9AFB-6B2A35C1CEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A7989BF-012E-4B20-9AFB-6B2A35C1CEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A7989BF-012E-4B20-9AFB-6B2A35C1CEFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E41E7878-E859-4804-AD5A-A03E3F70AD09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E41E7878-E859-4804-AD5A-A03E3F70AD09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E41E7878-E859-4804-AD5A-A03E3F70AD09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E41E7878-E859-4804-AD5A-A03E3F70AD09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
