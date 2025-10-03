@@ -23,6 +23,7 @@ namespace bataille_navale
 
             Plateau plat = new Plateau();
             plat.LancementPartie();
+            Console.ReadLine();
         }
     }
 }
