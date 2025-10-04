@@ -28,16 +28,16 @@ namespace Bataille_Navale
 
         public void CreationPlateau()
         {
-            for (int i=0; i< 10; i++)
+            for (int i = 0; i < 10; i++)
             {
-                for (int j=0; j < 10; j++)
+                for (int j = 0; j < 10; j++)
                 {
                     PlateauJeu[i, j] = new Position(i, j);
                 }
             }
 
             Random random = new Random();
-            foreach(Bateau bateau in Bateaux)
+            foreach (Bateau bateau in Bateaux)
             {
                 int taille = bateau.Taille;
                 bool isVertical = random.Next(2) == 0;
@@ -98,10 +98,10 @@ namespace Bataille_Navale
             x = 0;
             y = 0;
             if (position.GetLength(0) != 2) return false;
-            bool validCoor1 = Int32.TryParse(position[0], out x) && x<=10 && x>0;
+            bool validCoor1 = int.TryParse(position[0], out x) && x <= 10 && x > 0;
             if (!validCoor1) return false;
 
-            bool validCoor2 = Int32.TryParse(position[1], out y) && y <= 10 && y > 0;
+            bool validCoor2 = int.TryParse(position[1], out y) && y <= 10 && y > 0;
             if (!validCoor2) return false;
 
             return true;
@@ -117,7 +117,19 @@ namespace Bataille_Navale
         /// <returns></returns>
         private bool PlacerBateau(int x, int y, int taille, bool estVertical)
         {
+            // En commentaires - tu te débarasses du risque de dépasser la grille
+            // Test par rapport aux bords 
+            /*if (estVertical && 10 - x < taille)
+            {
+                return false;
+            }
 
+            if (!estVertical && 10 - y < taille)
+            {
+                return false;
+            }*/
+
+            // Beaucoup, beaucoup de boucles for imbriquées. Il est possible de simplifier ce code. 
             Console.WriteLine(x + " " + y + " " + taille + " " + estVertical);
             // validation
             if (!estVertical)
@@ -125,15 +137,17 @@ namespace Bataille_Navale
                 for (int i = x; i < x + taille; i++)
                 {
                     /*if (PlateauJeu[i, y].Statut != Etat.Caché) return false;*/
-                    foreach(Bateau bateau in Bateaux)
+                    foreach (Bateau bateau in Bateaux)
                     {
-                        foreach(Position pos in bateau.Positions)
+                        foreach (Position pos in bateau.Positions)
                         {
-                            for (int k = Math.Max(pos.X-1, 0); k < Math.Min(pos.X + 2, 10); k++)
+                            // La partie borne de la grille, tu pourrais la traiter avant de tester les conflits avec les autres bateaux. (exemple en com si dessus)
+                            for (int k = Math.Max(pos.X - 1, 0); k < Math.Min(pos.X + 2, 10); k++)
                             {
                                 for (int l = Math.Max(pos.Y - 1, 0); l < Math.Min(pos.Y + 2, 10); l++)
                                 {
-                                    if(i == k && y == l)
+                                    // Il faut aussi penser aux cases à côtés des bateaux.
+                                    if (i == k && y == l)
                                     {
                                         return false;
                                     }
@@ -143,7 +157,8 @@ namespace Bataille_Navale
                         }
                     }
                 }
-            } else
+            }
+            else
             {
                 for (int j = y; j < y + taille; j++)
                 {
@@ -168,7 +183,7 @@ namespace Bataille_Navale
                 }
             }
 
-            // placement
+            // Placement du bateau plutôt dans la méthode CreationPlateau
             bool statusss = false;
             foreach (Bateau bateau in Bateaux)
             {
@@ -217,6 +232,7 @@ namespace Bataille_Navale
                     }
                 }
             }
+            // OK
             PlateauJeu[x, y].Plouf();
         }
 
@@ -286,6 +302,7 @@ namespace Bataille_Navale
 		{
             foreach(Bateau bateau in Bateaux)
             {
+                // C'est OK
                 if (bateau.Positions.Count() == 0 || bateau.Positions.First().Statut != Etat.Coulé) return false; 
             }
 			return true;
@@ -301,6 +318,7 @@ namespace Bataille_Navale
                 }
             }
 
+            // Cette partie, tu aurais pu la mettre dans Bateau - méthode Touché
             foreach (Position pos in bateau.Positions)
             {
                 pos.Coulé();

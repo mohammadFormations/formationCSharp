@@ -24,8 +24,9 @@ namespace Bataille_Navale
         /// <param name="y"></param>
         public void Touché(int x, int y)
         {
-            foreach (Position position in Positions) {
-                if (position.X== x && position.Y == y)
+            foreach (Position position in Positions)
+            {
+                if (position.X == x && position.Y == y)
                 {
                     position.Touché();
                 }
@@ -39,14 +40,13 @@ namespace Bataille_Navale
         {
             foreach (Position position in Positions)
             {
-                if (position.Statut != Etat.Touché)
+                if (position.Statut != Etat.Touché || position.Statut != Etat.Coulé)
                 {
                     return false;
                 }
             }
             return true;
         }
-
 
     }
 }

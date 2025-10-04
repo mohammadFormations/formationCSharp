@@ -14,7 +14,7 @@ namespace bataille_navale
 
             /*
              reponses aux questions:
-             2 a bateau coulé <=> toutes les position dans la liste position sont touché
+             2 a bateau coulé <=> toutes les positions dans la liste position sont touchées 
              7 a une partie est terminee quand tout les position de tout les bateau sont touché
              dans ma propre implementation je coule les positions des que
             la derniere position d un bateau est touche
