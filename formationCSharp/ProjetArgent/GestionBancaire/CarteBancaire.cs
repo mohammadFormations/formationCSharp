@@ -1,0 +1,40 @@
+﻿using ProjetArgent.GestionBancaire;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjetArgent.GestionBancaire
+{
+    public class CarteBancaire
+    {
+        private TimeSpan _spanDePlafond = new TimeSpan(10, 0, 0, 0);
+
+        private List<int> _numComptes;
+        private HistoriqueDeTransactions _historique;
+        private decimal _plafond;
+
+
+        public string Numero;   
+
+        public CarteBancaire(
+            string numero,
+            decimal plafond)
+        {
+            Numero = numero;
+            _plafond = plafond;
+        }
+
+        public decimal GetMaximumMontant(DateTime datime)
+        {
+            return _plafond - _historique.GetMontantPendantSpan(datime, _spanDePlafond);
+        }
+
+        public void MAJHistorique(Transaction transaction)
+        {
+            _historique.AddTransaction(transaction);
+        }
+
+    }
+}
