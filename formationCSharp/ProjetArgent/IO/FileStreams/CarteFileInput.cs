@@ -12,7 +12,7 @@ namespace ProjetArgent.IO.FileStreams
         private FileStream fs;
         private StreamReader reader;
 
-        CarteFileInput(string path)
+        public CarteFileInput(string path)
         {
             fs = File.OpenRead(path);
             reader = new StreamReader(fs);
@@ -21,6 +21,11 @@ namespace ProjetArgent.IO.FileStreams
         public string ReadCarte()
         {
             return reader.ReadLine();
+        }
+
+        public void close()
+        {
+            reader.Close();
         }
     }
 }

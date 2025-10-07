@@ -13,7 +13,7 @@ namespace ProjetArgent.IO.FileStreams
         private FileStream fs;
         private StreamWriter writer;
 
-        CompteRenduFileOutput(string path)
+        public CompteRenduFileOutput(string path)
         {
             fs = File.OpenWrite(path);
             writer = new StreamWriter(fs);
@@ -21,6 +21,11 @@ namespace ProjetArgent.IO.FileStreams
         public void writeCompteRendu(string compteRendu)
         {
             writer.WriteLine(compteRendu);
+        }
+
+        public void close()
+        {
+            writer.Close();
         }
 
     }

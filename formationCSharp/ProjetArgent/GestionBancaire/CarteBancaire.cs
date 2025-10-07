@@ -11,8 +11,7 @@ namespace ProjetArgent.GestionBancaire
     {
         private TimeSpan _spanDePlafond = new TimeSpan(10, 0, 0, 0);
 
-        private List<int> _numComptes;
-        private HistoriqueDeTransactions _historique;
+        private readonly HistoriqueDeTransactions _historique;
         private decimal _plafond;
 
 
@@ -24,6 +23,7 @@ namespace ProjetArgent.GestionBancaire
         {
             Numero = numero;
             _plafond = plafond;
+            _historique = new HistoriqueDeTransactions();
         }
 
         public decimal GetMaximumMontant(DateTime datime)

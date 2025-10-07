@@ -10,8 +10,8 @@ namespace ProjetArgent.GestionBancaire
     {
         public enum TypeCompte
         {
-            courant,
-            livret
+            Courant,
+            Livret
         }
     }
 }

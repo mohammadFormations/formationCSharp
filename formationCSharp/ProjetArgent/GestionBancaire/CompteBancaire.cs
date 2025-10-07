@@ -10,14 +10,13 @@ namespace ProjetArgent.GestionBancaire
     public class CompteBancaire
     {
 
-        private decimal _solde = 0;
+        private decimal _solde;
         private TypeCompteEnum.TypeCompte _type;
         private  CarteBancaire _carteBancaire;
-        private string _carteBancaireId;
 
         public int Id = 0;
 
-        public CompteBancaire(int id, TypeCompteEnum.TypeCompte type, CarteBancaire carteBancaire, decimal solde = 0)
+        public CompteBancaire(int id, TypeCompteEnum.TypeCompte type, CarteBancaire carteBancaire, decimal solde)
         {
             _solde = solde;
             _type = type;
@@ -32,8 +31,6 @@ namespace ProjetArgent.GestionBancaire
             return true;
         }
 
-        // duplication de DeposerDeLargent 2 fonction qui on la même fonctionalitée 
-        // a ce moment mais ce n'est pas guaranti dans le futur.
         public bool RecevoirUneTransaction(decimal montant)
         {
             if (montant <= 0) return false;
@@ -69,15 +66,24 @@ namespace ProjetArgent.GestionBancaire
             return true;
         }
 
-        public bool EffectueruneTransactionVersUnCompte(CompteBancaire destinataire, Transaction transaction)
+        public bool IsTransactionPossibleEntreComptes(CompteBancaire destinataire)
         {
-           if (EffectuerUnVirement(transaction.Montant, transaction.Horodatage))
-            {
-                destinataire.DeposerDeLargent(transaction.Montant);
-                _carteBancaire.MAJHistorique(transaction);
-                return true;
-            }
-           return false;
+            if (destinataire._carteBancaire.Numero == _carteBancaire.Numero) return true;
+            if (destinataire._type == TypeCompteEnum.TypeCompte.Courant
+                && _type == TypeCompteEnum.TypeCompte.Courant) return true;
+            return false;
+          
+        }
+
+        public bool EffectuerUneTransactionVersUnCompte(CompteBancaire destinataire, Transaction transaction)
+        {
+            if (!IsTransactionPossibleEntreComptes(destinataire)) return false;
+            if (!EffectuerUnVirement(transaction.Montant, transaction.Horodatage)) return false;
+
+            destinataire.DeposerDeLargent(transaction.Montant);
+            _carteBancaire.MAJHistorique(transaction);
+            return true;
+
         }
     }
 }

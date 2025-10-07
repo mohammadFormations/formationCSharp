@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjetArgent.IO.ObjectBuilder
 {
+    // les deserializers des classes static
     public class CarteDeserializer
     {
         private string _numero;
@@ -17,7 +18,8 @@ namespace ProjetArgent.IO.ObjectBuilder
         public bool ExtractCarteFromLine(string line, out  CarteBancaire carteBancaire)
         {
             carteBancaire = null;
-            String[] elements = line.Split(';');
+            if (line == null) return false;
+            string[] elements = line.Split(';').ToList().FindAll(el => string.Compare(el, "") != 0).ToArray<string>();
             if (elements.Length == 0 || elements.Length > 2) return false;
 
 
@@ -26,10 +28,10 @@ namespace ProjetArgent.IO.ObjectBuilder
 
             if (elements.Length == 2)
             {
-                bool state = int.TryParse(elements[1], NumberStyles.Number, CultureInfo.InvariantCulture, out int plaf);
+                bool state = decimal.TryParse(elements[1], NumberStyles.Number, CultureInfo.InvariantCulture, out decimal plaf);
                 if (!state) return false;
-
-                _plafond = (decimal)(plaf / 100) * 100;
+                if (plaf < 0) return false;
+                _plafond = (decimal)((int)plaf / 100) * 100;
             }
             else
             {
@@ -37,7 +39,7 @@ namespace ProjetArgent.IO.ObjectBuilder
                 if (!VerifyPlafond()) return false;
             }
             carteBancaire = new CarteBancaire(_numero, _plafond);
-            return false;
+            return true;
         }
 
 
@@ -45,7 +47,7 @@ namespace ProjetArgent.IO.ObjectBuilder
         {
             if (_numero == null || _numero.Length != 16) return false;
 
-            bool state = int.TryParse(_numero, out int num);
+            bool state = long.TryParse(_numero, out long num);
             if (!state) return false;
 
             if (num < 0) return false;

@@ -16,7 +16,7 @@ namespace ProjetArgent.GestionBancaire
         public decimal Montant { get; private set; }
         public DateTime Horodatage { get; private set; }
 
-        Transaction(int numTransaction, DateTime horodatage, decimal montant, int expediteurId, int destinateurId)
+        public Transaction(int numTransaction, DateTime horodatage, decimal montant, int expediteurId, int destinateurId)
         {
             NumTransaction = numTransaction;
             this.Horodatage = horodatage;

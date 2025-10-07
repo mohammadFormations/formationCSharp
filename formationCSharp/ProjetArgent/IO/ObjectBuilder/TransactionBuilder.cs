@@ -8,52 +8,78 @@ using System.Threading.Tasks;
 
 namespace ProjetArgent.IO.serializeurs
 {
-    internal class TransactionDeserializer
+    public class TransactionDeserializer
     {
         private int _id;
         private DateTime _horodatage;
         private decimal _montant;
         private int _expediteurId;
         private int _destinateurId;
-        private CompteBancaire _expediteur;
-        private CompteBancaire _destinataire;
-
-        public bool ExtractCompteFromLine(string line, List<CompteBancaire> comptes, List<Transaction> transactions, out CompteBancaire compteBancaire)
+        public bool ExtractTransactionFromLine(string line, List<CompteBancaire> comptes, List<Transaction> transactions, out Transaction transaction)
         {
-            compteBancaire = null;
-            String[] elements = line.Split(';');
+            transaction = null;
+            if (line == null) return false;
+            string[] elements = line.Split(';').ToList().FindAll(el => string.Compare(el, "") != 0).ToArray<string>();
             if (elements.Length != 5) return false;
 
             if (!SetId(elements[0], transactions)) return false;
             if (!SetHorodatage(elements[1])) return false;
             if (!SetMontant(elements[2])) return false;
-            if (!SetExpediteur(elements[3])) return false;
-            if (!SetDestinateur(elements[4])) return false;
+            if (!SetExpediteur(elements[3], comptes)) return false;
+            if (!SetDestinateur(elements[4], comptes)) return false;
 
 
-            compteBancaire = new Transaction(_id, _horodatage, _montant, _expediteurId, _destinateurId);
+            transaction = new Transaction(_id, _horodatage, _montant, _expediteurId, _destinateurId);
+            return true;
+        }
+
+        private bool SetExpediteur(string compteBancaireId, List<CompteBancaire> comptes)
+        {
+            bool state = VerifyCompteBancaire(compteBancaireId, comptes, out int id);
+            if (state)
+            {
+                _expediteurId = id;
+                return true;
+            }
             return false;
         }
 
-        private bool SetCarteBancaire(string carteBancaireId, List<CarteBancaire> cartes)
-        {
-            if (carteBancaireId == null || carteBancaireId.Length != 16) return false;
 
-            bool state = int.TryParse(carteBancaireId, out int num);
+        private bool VerifyCompteBancaire(string compteBancaireId, List<CompteBancaire> comptes, out int compteId)
+        {
+            compteId = 0;
+            if (compteBancaireId == null) return false;
+
+            bool state = int.TryParse(compteBancaireId, out int num);
             if (!state) return false;
 
             if (num < 0) return false;
-            _carteBancaireId = carteBancaireId;
-
-            foreach (CarteBancaire carte in cartes)
+            if (num == 0)
             {
-                if (carte.Numero == carteBancaireId)
+                compteId = 0;
+                return true;
+            }
+
+            foreach (CompteBancaire compte in comptes)
+            {
+                if (compte.Id == num)
                 {
-                    _carteBancaire = carte;
+                    compteId = num;
                     return true;
                 }
             }
 
+            return false;
+        }
+
+        private bool SetDestinateur(string compteBancaireId, List<CompteBancaire> comptes)
+        {
+            bool state = VerifyCompteBancaire(compteBancaireId, comptes, out int id);
+            if (state)
+            {
+                _destinateurId = id;
+                return true;
+            }
             return false;
         }
 
@@ -73,18 +99,18 @@ namespace ProjetArgent.IO.serializeurs
             return true;
         }
 
-        private bool SetType(string type)
+        private bool SetHorodatage(string horodatage)
         {
-            bool state = Enum.TryParse(type, out TypeCompteEnum.TypeCompte parsedType);
+            bool state = DateTime.TryParseExact(horodatage, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, 0, out DateTime datime);
             if (!state) return false;
-            _type = parsedType;
+            _horodatage = datime;
             return true;
         }
 
-        private bool SetSolde(string solde)
+        private bool SetMontant(string solde)
         {
-            bool state = decimal.TryParse(solde, NumberStyles.Number, CultureInfo.InvariantCulture, out _solde);
-            if (!state || _solde < 0) return false;
+            bool state = decimal.TryParse(solde, NumberStyles.Number, CultureInfo.InvariantCulture, out _montant);
+            if (!state || _montant < 0) return false;
             return true;
         }
 

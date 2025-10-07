@@ -12,14 +12,19 @@ namespace ProjetArgent.IO.FileStreams
         private FileStream fs;
         private StreamReader reader;
 
-        CompteFileInput(string path)
+        public CompteFileInput(string path)
         {
             fs = File.OpenRead(path);
             reader = new StreamReader(fs);
         }
-        public string ReadCompteRendu()
+        public string ReadCompte()
         {
             return reader.ReadLine();
+        }
+
+        public void close()
+        {
+            reader.Close();
         }
     }
 }

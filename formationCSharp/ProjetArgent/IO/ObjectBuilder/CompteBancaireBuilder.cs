@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace ProjetArgent.IO.serializeurs
 {
-    internal class CompteBancaireDeserializer
+    public class CompteBancaireDeserializer
     {
         private const decimal _defaultSolde = 0;
         private decimal _solde = 0;
         private int _id = 0;
         private TypeCompteEnum.TypeCompte _type;
         private CarteBancaire _carteBancaire;
-        private string _carteBancaireId;
 
         public bool ExtractCompteFromLine(string line, List<CarteBancaire> cartes, List<CompteBancaire> comptes, out CompteBancaire compteBancaire)
         {
             compteBancaire = null;
-            String[] elements = line.Split(';');
+            if (line == null) return false;
+            string[] elements = line.Split(';').ToList().FindAll(el => string.Compare(el, "") != 0).ToArray<string>();
             if (elements.Length < 3 || elements.Length > 4) return false;
 
 
@@ -28,8 +28,8 @@ namespace ProjetArgent.IO.serializeurs
             if (!SetCarteBancaire(elements[1], cartes)) return false;
             if (!SetType(elements[2])) return false;
 
-            if (elements.Length == 3 && !SetSolde(elements[3])) return false;
-            else _solde = _defaultSolde;
+            if (elements.Length == 4 && !SetSolde(elements[3])) return false;
+            if (elements.Length == 3) _solde = _defaultSolde;
 
 
             compteBancaire = new CompteBancaire(_id, _type, _carteBancaire, _solde);
@@ -40,11 +40,10 @@ namespace ProjetArgent.IO.serializeurs
         {
             if (carteBancaireId == null || carteBancaireId.Length != 16) return false;
 
-            bool state = int.TryParse(carteBancaireId, out int num);
+            bool state = long.TryParse(carteBancaireId, out long num);
             if (!state) return false;
 
             if (num < 0) return false;
-            _carteBancaireId = carteBancaireId;
 
             foreach (CarteBancaire carte in cartes)
             {
