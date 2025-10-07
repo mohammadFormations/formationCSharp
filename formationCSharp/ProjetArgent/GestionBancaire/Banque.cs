@@ -17,7 +17,6 @@ namespace ProjetArgent.GestionBancaire
         private const string _transactions_path = "transactions.csv";
         private const string _compte_rendu = "compte_rendu.csv";
 
-
         private static CarteFileInput carteFileReader = new CarteFileInput(_cartes_path);
         private static CompteFileInput compteFileReader = new CompteFileInput(_comptes_path);
         private static TransactionFileInput transactionFileReader = new TransactionFileInput(_transactions_path);
@@ -84,6 +83,7 @@ namespace ProjetArgent.GestionBancaire
             {
                 CompteBancaire expediteur = CompteBancaires.FirstOrDefault(compte => compte.Id == transaction.ExpediteurId);
                 bool status = expediteur.RetirerDeLargent(transaction.Montant, transaction.Horodatage);
+                if (status) expediteur._carteBancaire.MAJHistorique(transaction);
                 compteRenduFileWriter.writeCompteRendu($"{transaction.NumTransaction};{(status ? StatusTransactionEnum.StatusTransaction.OK : StatusTransactionEnum.StatusTransaction.KO)}");
                 Console.WriteLine(status);
             } else

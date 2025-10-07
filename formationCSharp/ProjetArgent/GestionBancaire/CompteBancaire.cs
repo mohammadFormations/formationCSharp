@@ -12,7 +12,7 @@ namespace ProjetArgent.GestionBancaire
 
         private decimal _solde;
         private TypeCompteEnum.TypeCompte _type;
-        private  CarteBancaire _carteBancaire;
+        public  CarteBancaire _carteBancaire;
 
         public int Id = 0;
 
@@ -52,6 +52,7 @@ namespace ProjetArgent.GestionBancaire
             if (montant > _solde) return false;
             if (_carteBancaire.GetMaximumMontant(datime) < montant) return false;
             _solde -= montant;
+
             return true;
 
         }
