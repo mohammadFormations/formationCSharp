@@ -11,8 +11,7 @@ namespace ProjetArgent
     {
         static void Main(string[] args)
         {
-            Banque bnp = new Banque();
-            bnp.ProcessBatch();
+            Banque.ProcessBatch();
         }
     }
 }

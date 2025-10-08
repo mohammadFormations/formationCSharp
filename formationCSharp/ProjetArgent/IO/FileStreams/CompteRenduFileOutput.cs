@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjetArgent.GestionBancaire.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace ProjetArgent.IO.FileStreams
         public void writeCompteRendu(string compteRendu)
         {
             writer.WriteLine(compteRendu);
+        }
+
+        public void FormatEtEcritCompteRendu(int transactionId, bool status)
+        {
+            writeCompteRendu($"{transactionId};{(status ? StatusTransactionEnum.StatusTransaction.OK : StatusTransactionEnum.StatusTransaction.KO)}");
         }
 
         public void close()

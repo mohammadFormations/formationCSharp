@@ -11,7 +11,7 @@ namespace ProjetArgent.GestionBancaire
     {
 
         private decimal _solde;
-        private TypeCompteEnum.TypeCompte _type;
+        public TypeCompteEnum.TypeCompte Type;
         public  CarteBancaire _carteBancaire;
 
         public int Id = 0;
@@ -19,7 +19,7 @@ namespace ProjetArgent.GestionBancaire
         public CompteBancaire(int id, TypeCompteEnum.TypeCompte type, CarteBancaire carteBancaire, decimal solde)
         {
             _solde = solde;
-            _type = type;
+            Type = type;
             _carteBancaire = carteBancaire;
             Id = id;
         }
@@ -30,7 +30,7 @@ namespace ProjetArgent.GestionBancaire
             _solde += montant;
             return true;
         }
-
+/*
         public bool RecevoirUneTransaction(decimal montant)
         {
             if (montant <= 0) return false;
@@ -44,7 +44,7 @@ namespace ProjetArgent.GestionBancaire
             _solde += montant;
             return true;
         }
-
+*/
 
         public bool RetirerDeLargent(decimal montant, DateTime datime)
         {
@@ -67,24 +67,5 @@ namespace ProjetArgent.GestionBancaire
             return true;
         }
 
-        public bool IsTransactionPossibleEntreComptes(CompteBancaire destinataire)
-        {
-            if (destinataire._carteBancaire.Numero == _carteBancaire.Numero) return true;
-            if (destinataire._type == TypeCompteEnum.TypeCompte.Courant
-                && _type == TypeCompteEnum.TypeCompte.Courant) return true;
-            return false;
-          
-        }
-
-        public bool EffectuerUneTransactionVersUnCompte(CompteBancaire destinataire, Transaction transaction)
-        {
-            if (!IsTransactionPossibleEntreComptes(destinataire)) return false;
-            if (!EffectuerUnVirement(transaction.Montant, transaction.Horodatage)) return false;
-
-            destinataire.DeposerDeLargent(transaction.Montant);
-            _carteBancaire.MAJHistorique(transaction);
-            return true;
-
-        }
     }
 }
