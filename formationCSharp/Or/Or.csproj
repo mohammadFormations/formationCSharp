@@ -56,6 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Serializeurs\ExportCompte.cs" />
+    <Compile Include="Serializeurs\ExportCompteTransactions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -106,6 +108,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Beneficiaire.cs" />
     <Compile Include="Models\Compte.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Pages\Accueil.xaml.cs">

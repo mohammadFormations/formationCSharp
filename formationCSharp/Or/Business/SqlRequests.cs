@@ -29,6 +29,13 @@ namespace Or.Business
 
         static readonly string queryUpdateCompte = "UPDATE COMPTE SET Solde=Solde-@Montant WHERE IdtCpt=@IdtCompte";
 
+
+        static readonly string queryListeBeneficiairesAssocieClient = "select IdCpt, NumCarte from BENEFICIAIRES where NumCarte = @Carte order by IdCpt asc; ";
+        static readonly string queryAddBeneficiaire = "INSERT INTO BENEFICIAIRES (IdCpt, NumCarte) values (@IdtCpt, @Carte);";
+        static readonly string querySuppressionBeneficiaire = "DELETE from beneficiaires where IdtCpt = @IdtCpt and NumCarte = @NumCarte ;";
+        static readonly string queryBeneficiairePotentielByIdtCpt = "select NumCarte, IdCpt from beneficiaires where IdCpt = @IdCpt ;";
+        
+        
         /// <summary>
         /// Obtention des infos d'une carte
         /// </summary>
@@ -468,6 +475,138 @@ namespace Or.Business
 
             return updateCompte;
         }
+
+
+        /// <summary>
+        /// Liste des beneficiaires associée a une carte 
+        /// </summary>
+        /// <param name="idtCpt"></param>
+        /// <returns></returns>
+        public static List<Beneficiaire> ListeBeneficiairesAssocieClient(long  NumCarte)
+        {
+            List<Beneficiaire> beneficiaires = new List<Beneficiaire>();
+
+            string connectionString = ConstructionConnexionString(fileDb);
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqliteCommand(queryListeBeneficiairesAssocieClient, connection))
+                {
+                    command.Parameters.AddWithValue("@Carte", NumCarte);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        int idt;
+                        long carte;
+
+                        while (reader.Read())
+                        {
+                            idt = reader.GetInt32(0);
+                            carte = reader.GetInt64(1);
+
+                            Beneficiaire beneficiaire = new Beneficiaire(idt, carte);
+                            beneficiaires.Add(beneficiaire);
+                        }
+                    }
+                }
+            }
+
+            return beneficiaires;
+        }
+
+
+        /// <summary>
+        /// Ajouter un nouveau benificiaire
+        /// </summary>
+        /// <param name="benef"></param>
+        /// <returns></returns>
+        public static bool AjoutBeneficiaire(Beneficiaire benef)
+        {
+            string connectionString = ConstructionConnexionString(fileDb);
+
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                // Démarrer une transaction même si on n'a pas besoin pour l'instant
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Insertion de la transaction
+                        var insertTransac = connection.CreateCommand();
+                        insertTransac.CommandText = queryAddBeneficiaire;
+
+                        insertTransac.Parameters.AddWithValue("@IdtCpt", benef.IdCpt);
+                        insertTransac.Parameters.AddWithValue("@Carte", benef.NumCarte);
+
+                        insertTransac.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        Console.WriteLine("Transaction validée.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // En cas d’erreur, annuler la transaction
+                        Console.WriteLine("Erreur : " + ex.Message);
+                        transaction.Rollback();
+                        Console.WriteLine("Transaction annulée.");
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Suppresion de beneficiaire
+        /// </summary>
+        /// <param name="benef"></param>
+        /// <returns></returns>
+        public static bool SuppresionBeneficiaire(Beneficiaire benef)
+        {
+            string connectionString = ConstructionConnexionString(fileDb);
+
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                // Démarrer une transaction même si on n'a pas besoin pour l'instant
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Insertion de la transaction
+                        var insertTransac = connection.CreateCommand();
+                        insertTransac.CommandText = queryAddBeneficiaire;
+
+                        insertTransac.Parameters.AddWithValue("@IdtCpt", benef.IdCpt);
+                        insertTransac.Parameters.AddWithValue("@Carte", benef.NumCarte);
+
+                        insertTransac.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        Console.WriteLine("Transaction validée.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // En cas d’erreur, annuler la transaction
+                        Console.WriteLine("Erreur : " + ex.Message);
+                        transaction.Rollback();
+                        Console.WriteLine("Transaction annulée.");
+                    }
+                }
+            }
+
+            return true;
+        }
+
+
+
 
     }
 }

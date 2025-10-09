@@ -1,8 +1,12 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Xml.Serialization;
 using Or.Business;
 using Or.Models;
+using Or.Serializeurs;
 
 namespace Or.Pages
 {
@@ -69,6 +73,34 @@ namespace Or.Pages
                 gridView.Columns[2].Width = totalWidth * 0.30; // 20%
                 gridView.Columns[3].Width = totalWidth * 0.30; // 20%
             }
+        }
+
+        public void SerialiserComptesTransaction(long numCarte)
+        {
+
+            ExportCompte exportCompte = new ExportCompte();
+            List<Compte> comptes = SqlRequests.ListeComptesAssociesCarte(numCarte);
+            exportCompte.Comptes = comptes;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ExportCompte));
+
+            using (TextWriter stream = new StreamWriter("C:\\Users\\FORMATION\\Desktop\\comptes.xml"))
+            {
+                foreach (Compte compte in comptes)
+                {
+                    ExportCompteTransactions transacs = new ExportCompteTransactions();
+                    List<Transaction> transactions = SqlRequests.ListeTransactionsAssociesCompte(compte.Id);
+                    transacs.Transactions = transactions.Count > 10 ? transactions.GetRange(0, 10) : transactions;
+                    compte.Transactions = transacs;
+                }
+
+                serializer.Serialize(stream, exportCompte);
+            }
+        }
+
+        void ExportComptes(object sender, RoutedEventArgs e)
+        {
+            SerialiserComptesTransaction(long.Parse(Numero.Text));
         }
 
     }

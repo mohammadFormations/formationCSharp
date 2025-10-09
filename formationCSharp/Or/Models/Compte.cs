@@ -1,15 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using Or.Serializeurs;
 
 namespace Or.Models
 {
     public enum TypeCompte { Courant, Livret }
 
+    [XmlRoot]
     public class Compte
     {
+        public Compte() { }
+
+        [XmlElement("Identifiant")]
         public int Id { get; set; }
         public long IdentifiantCarte { get; set; }
+
+        [XmlElement("Type")]
         public TypeCompte TypeDuCompte { get; set; }
-        public decimal Solde { get; private set; }
+
+
+        [XmlElement("Solde")]
+        public decimal Solde { get; set; }
+
+
+        [XmlElement("Transactions")]
+        public ExportCompteTransactions Transactions { get; set; }
+
 
 
         public Compte(int id, long identifiantCarte, TypeCompte type, decimal soldeInitial)
@@ -19,6 +37,7 @@ namespace Or.Models
             TypeDuCompte = type;
             Solde = soldeInitial;
         }
+
 
         /// <summary>
         /// Action de dépôt d'argent sur le compte bancaire
