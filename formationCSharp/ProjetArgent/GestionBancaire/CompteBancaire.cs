@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProjetArgent.GestionBancaire;
 
 namespace ProjetArgent.GestionBancaire
 {
@@ -26,10 +21,15 @@ namespace ProjetArgent.GestionBancaire
 
         public bool DeposerDeLargent(decimal montant)
         {
-            if (montant <= 0) return false;
+            if (montant <= 0)
+            {
+                return false;
+            }
+
             _solde += montant;
             return true;
         }
+        // Suppression du code mort 
 /*
         public bool RecevoirUneTransaction(decimal montant)
         {
@@ -48,8 +48,12 @@ namespace ProjetArgent.GestionBancaire
 
         public bool RetirerDeLargent(decimal montant, DateTime datime)
         {
-            if (montant <= 0) return false;
-            if (montant > _solde) return false;
+            // Tu peux combiner les deux conditions
+            if (montant <= 0 || montant > _solde)
+            {
+                return false;
+            }
+
             if (_carteBancaire.GetMaximumMontant(datime) < montant) return false;
             _solde -= montant;
 
@@ -57,6 +61,8 @@ namespace ProjetArgent.GestionBancaire
 
         }
 
+        // On notera que les deux méthodes RetirerDeLargent et RetirerDeLargent sont identiques, soit tu peux créer une méthode privée qui est appelée dans les deux
+        // ou une seule méthode
         public bool EffectuerUnVirement(decimal montant, DateTime datime)
         {
             if (montant <= 0) return false;

@@ -1,10 +1,6 @@
 ﻿using ProjetArgent.GestionBancaire;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetArgent.IO.ObjectBuilder
 {
@@ -14,6 +10,9 @@ namespace ProjetArgent.IO.ObjectBuilder
         private string _numero;
         private decimal _plafond;
         private const decimal _defaultPlafond = 500;
+        private const decimal _plafondMin = 500;
+        private const decimal _plafondMax = 3000;
+        private const int _longueurNumeroCarte = 16;
 
         public bool ExtractCarteFromLine(string line, out  CarteBancaire carteBancaire)
         {
@@ -45,7 +44,8 @@ namespace ProjetArgent.IO.ObjectBuilder
 
         private bool VerifyNumero()
         {
-            if (_numero == null || _numero.Length != 16) return false;
+            // On évite les littéraux
+            if (_numero == null || _numero.Length != _longueurNumeroCarte) return false;
 
             bool state = long.TryParse(_numero, out long num);
             if (!state) return false;
@@ -56,8 +56,7 @@ namespace ProjetArgent.IO.ObjectBuilder
 
         private bool VerifyPlafond()
         {
-            if(_plafond > 3000 || _plafond < 500) return false;
-            return true;
+            return !(_plafond > _plafondMax || _plafond < _plafondMin);
         }
 
     }

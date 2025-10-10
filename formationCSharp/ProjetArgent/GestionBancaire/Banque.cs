@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjetArgent.IO.FileStreams;
 using ProjetArgent.IO.ObjectBuilder;
 using ProjetArgent.IO.serializeurs;
-using ProjetArgent.GestionBancaire.Enums;
-using System.Runtime.InteropServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ProjetArgent.GestionBancaire
@@ -24,7 +19,7 @@ namespace ProjetArgent.GestionBancaire
         private static TransactionFileInput transactionFileReader = new TransactionFileInput(_transactions_path);
         private static CompteRenduFileOutput compteRenduFileWriter = new CompteRenduFileOutput(_compte_rendu);
 
-
+        // Des dictionnaires pourraient être appropriés
         public static  List<CompteBancaire> CompteBancaires = new List<CompteBancaire>();
         public static List<CarteBancaire> CartesBancaires = new List<CarteBancaire>();
         public static List<Transaction> Transactions = new List<Transaction>();
@@ -35,7 +30,6 @@ namespace ProjetArgent.GestionBancaire
             LireComptes();
             LireTransactions();
             ProcessAllTransactions();
-
         }
 
         public static void LireCartes()
@@ -72,6 +66,7 @@ namespace ProjetArgent.GestionBancaire
                 status = deserializer.ExtractTransactionFromLine(transactionFileReader.ReadTransaction(), CompteBancaires, Transactions, out transaction);
             }
         }
+
         public static void HandleDeposition(Transaction transaction)
         {
             CompteBancaire destinateur = CompteBancaires.FirstOrDefault(compte => compte.Id == transaction.DestinateurId);
@@ -102,11 +97,12 @@ namespace ProjetArgent.GestionBancaire
             if (transaction.ExpediteurId == 0 && transaction.DestinateurId != 0)
             {
                 HandleDeposition(transaction);
-            } else if (transaction.DestinateurId == 0 && transaction.ExpediteurId != 0)
+            }
+            else if (transaction.DestinateurId == 0 && transaction.ExpediteurId != 0)
             {
                 HandleRetrait(transaction);
-
-            } else if (transaction.ExpediteurId != 0 && transaction.DestinateurId != 0)
+            }
+            else if (transaction.ExpediteurId != 0 && transaction.DestinateurId != 0)
             {
                 HandleVirement(transaction);
             }
@@ -127,11 +123,11 @@ namespace ProjetArgent.GestionBancaire
 
         public static bool IsTransactionPossibleEntreComptes(CompteBancaire destinataire, CompteBancaire expediteur)
         {
-            if (destinataire._carteBancaire.Numero == expediteur._carteBancaire.Numero) return true;
-            if (destinataire.Type == TypeCompteEnum.TypeCompte.Courant
-                && expediteur.Type == TypeCompteEnum.TypeCompte.Courant) return true;
-            return false;
-
+            if (destinataire._carteBancaire.Numero == expediteur._carteBancaire.Numero)
+            {
+                return true;
+            }
+            return destinataire.Type == TypeCompteEnum.TypeCompte.Courant && expediteur.Type == TypeCompteEnum.TypeCompte.Courant;
         }
 
 
