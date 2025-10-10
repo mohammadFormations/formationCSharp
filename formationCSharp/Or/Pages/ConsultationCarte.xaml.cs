@@ -51,6 +51,11 @@ namespace Or.Pages
             PageFunctionNavigate(new Depot(long.Parse(Numero.Text)));
         }
 
+        private void GoBenef(object sender, RoutedEventArgs e)
+        {
+            PageFunctionNavigate(new Benef(long.Parse(Numero.Text)));
+        }
+
         void PageFunctionNavigate(PageFunction<long> page)
         {
             page.Return += new ReturnEventHandler<long>(PageFunction_Return);

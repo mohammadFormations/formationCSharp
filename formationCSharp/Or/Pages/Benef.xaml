@@ -1,4 +1,4 @@
-﻿<PageFunction x:Class="Or.Pages.ConsultationCarte"
+﻿<PageFunction x:Class="Or.Pages.Benef"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -9,7 +9,7 @@
       xmlns:ec="clr-namespace:Or.Business"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ConsultationCarte" KeepAlive="True" Cursor="Hand">
+      Title="Benef" KeepAlive="True" Cursor="Hand">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,7 +25,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Margin="10" Orientation="Vertical" Grid.Row="0" Grid.Column="0">
-            <TextBlock x:Name="Titre" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Consultation Carte" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
+            <TextBlock x:Name="Titre" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Bénéficiaires" VerticalAlignment="Top" FontSize="20" FontWeight="SemiBold"/>
         </StackPanel>
 
         <StackPanel Margin="10" Orientation="Vertical" Grid.Row="1" Grid.Column="0">
@@ -35,9 +35,6 @@
 
         </StackPanel>
         <ListView x:Name="listView" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2" SizeChanged="ListView_SizeChanged">
-            <ListView.Resources>
-                <ec:EuroConverter x:Key="EuroConverter"/>
-            </ListView.Resources>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -45,12 +42,12 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" Width="30">
+                    <GridViewColumn Header="Nom" Width="30">
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding Id}"
+                                    <TextBlock Text="{Binding Nom}"
                                                Style="{StaticResource TextColumnStyle}"
                                                TextAlignment="Center" />
                                 </Grid>
@@ -58,12 +55,12 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Type de compte" Width="130">
+                    <GridViewColumn Header="Prénom" Width="130">
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding TypeDuCompte}"
+                                    <TextBlock Text="{Binding Prenom}"
                                                Style="{StaticResource TextColumnStyle}"
                                                TextAlignment="Center" />
                                 </Grid>
@@ -71,14 +68,14 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Solde du compte" Width="150">
+                    <GridViewColumn Header="N Compte" Width="150">
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="{Binding Solde, Converter={StaticResource EuroConverter}}"
+                                    <TextBlock Text="{Binding IdCpt}"
                                                Style="{StaticResource TextColumnStyle}"
-                                               TextAlignment="Right" />
+                                               TextAlignment="Center" />
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -88,7 +85,7 @@
 
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Détails" Click="GoDetailsCompte" CommandParameter="{Binding Id}" />
+                                <Button Content="Supprimer" Click="DeleteBenef" CommandParameter="{Binding IdCpt}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -97,12 +94,8 @@
         </ListView>
 
         <StackPanel Margin="10" Orientation="Vertical" Grid.Row="2" Grid.Column="0" >
-            <Button Content="Consulter Historique" Margin="0,0,0,8"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoHistoTransactions" />
-            <Button Content="Effectuer un Retrait" Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoRetrait"/>
-            <Button Content="Effectuer un Dépôt"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoDepot" />
-            <Button Content="Effectuer un Virement"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoVirement" />
-            <Button Content="Liste Des Bénéficiaires"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoBenef" />
+            <Button Content="Retour"  Margin="0,0,0,8" HorizontalAlignment="Stretch" Click="Retour_Click" Width="164" />
         </StackPanel>
-        <Button Grid.Column="2" Content="Exporter Transactions" HorizontalAlignment="Center" Margin="0,110,0,0" Grid.Row="2" VerticalAlignment="Top" Height="34" Width="182" Click="ExportComptes"/>
+        <Button Grid.Column="2" Content="Ajouter Un Bénéficiaire" HorizontalAlignment="Center" Margin="0,110,0,0" Grid.Row="2" VerticalAlignment="Top" Height="34" Width="182" Click="GoAjBenef"/>
     </Grid>
 </PageFunction>

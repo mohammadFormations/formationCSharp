@@ -56,6 +56,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Pages\AjBenef.xaml.cs">
+      <DependentUpon>AjBenef.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Benef.xaml.cs">
+      <DependentUpon>Benef.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serializeurs\ExportCompte.cs" />
     <Compile Include="Serializeurs\ExportCompteTransactions.cs" />
     <Page Include="MainWindow.xaml">
@@ -75,6 +81,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\Accueil.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AjBenef.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Benef.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

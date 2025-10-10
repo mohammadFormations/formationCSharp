@@ -36,8 +36,13 @@ namespace Or.Pages
             viewExpediteur.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
             viewExpediteur.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Ascending));
             Expediteur.ItemsSource = viewExpediteur;
+            MajBenificiaires();
 
-            var viewDestinataire = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispo(ComptePorteur.Id));
+        }
+
+        private void MajBenificiaires()
+        {
+            var viewDestinataire = CollectionViewSource.GetDefaultView(SqlRequests.ListeBeneficiairesAssocieClient(ComptePorteur.IdentifiantCarte));
             viewDestinataire.GroupDescriptions.Add(new PropertyGroupDescription("IdentifiantCarte"));
             viewDestinataire.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Ascending));
             viewDestinataire.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
@@ -88,5 +93,20 @@ namespace Or.Pages
             viewDestinataire.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));
             Destinataire.ItemsSource = viewDestinataire;
         }
+        void PageFunction_Return(object sender, ReturnEventArgs<long> e)
+        {
+            MajBenificiaires();
+        }
+
+        void PageFunctionNavigate(PageFunction<long> page)
+        {
+            page.Return += new ReturnEventHandler<long>(PageFunction_Return);
+            NavigationService.Navigate(page);
+        }
+        private void GoAjBenef(object sender, RoutedEventArgs e)
+        {
+            PageFunctionNavigate(new AjBenef(CartePorteur.Id));
+        }
+
     }
 }

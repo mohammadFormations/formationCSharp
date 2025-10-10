@@ -81,6 +81,7 @@ namespace Or.Models
         /// <returns></returns>
         private CodeResultatTransaction EstEligibleMaximumRetraitHebdomadaire(decimal montant, DateTime dateEffet)
         {
+
             List<Transaction> retraitsHisto = Historique.Where(x => (x.Horodatage > dateEffet.AddDays(-10)) && ListComptesId.Contains(x.Expediteur)).Select(x => x).ToList();
             decimal sommeHisto = montant + retraitsHisto.Sum(x => x.Montant);
             return (sommeHisto < Plafond ? CodeResultatTransaction.Success : CodeResultatTransaction.PlafondMaxAutoriseDepasse);
