@@ -1,9 +1,4 @@
-﻿using ProjetArgent.GestionBancaire;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace ProjetArgent.GestionBancaire
 {
@@ -17,9 +12,7 @@ namespace ProjetArgent.GestionBancaire
 
         public string Numero;   
 
-        public CarteBancaire(
-            string numero,
-            decimal plafond)
+        public CarteBancaire(string numero, decimal plafond)
         {
             Numero = numero;
             _plafond = plafond;

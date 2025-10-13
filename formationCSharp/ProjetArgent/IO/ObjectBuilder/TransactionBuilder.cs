@@ -102,7 +102,11 @@ namespace ProjetArgent.IO.serializeurs
         private bool SetHorodatage(string horodatage)
         {
             bool state = DateTime.TryParseExact(horodatage, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, 0, out DateTime datime);
-            if (!state) return false;
+            if (!state)
+            {
+                return false;
+            }
+
             _horodatage = datime;
             return true;
         }
@@ -110,8 +114,8 @@ namespace ProjetArgent.IO.serializeurs
         private bool SetMontant(string solde)
         {
             bool state = decimal.TryParse(solde, NumberStyles.Number, CultureInfo.InvariantCulture, out _montant);
-            if (!state || _montant < 0) return false;
-            return true;
+            // plus simple
+            return state && _montant >= 0;
         }
 
     }

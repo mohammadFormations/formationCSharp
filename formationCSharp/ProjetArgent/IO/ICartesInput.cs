@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjetArgent.IO
 {
+    // tu n'utilises pas ces interfaces 
     internal interface ICartesInput
     {
         string ReadCarte();
