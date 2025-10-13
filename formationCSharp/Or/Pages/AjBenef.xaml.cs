@@ -42,9 +42,14 @@ namespace Or.Pages
         {
             if (int.TryParse(NumCompte.Text.Trim(' '), out int numCompte) && numCompte > 0)
             {
-                Console.WriteLine("test");
-                if (SqlRequests.EstBeneficiairePotentielByIdtCpt(numCompte))
-                SqlRequests.AjoutBeneficiaire(numCompte, NumCarte);
+                if (SqlRequests.EstBeneficiairePotentielByIdtCpt(numCompte, NumCarte))
+                {
+                    SqlRequests.AjoutBeneficiaire(numCompte, NumCarte);
+                }
+                else
+                {
+                    MessageBox.Show("Compte Inaccessible comme benificière");
+                }
 
             }
             else

@@ -16,7 +16,7 @@ namespace Or.Business
     {
         static readonly string fileDb = "BaseAppBancaire.db";
 
-        static readonly string queryComptesDispo = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NOT IdtCpt=@IdtCpt";
+        static readonly string queryComptesDispo = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE (NOT IdtCpt = @IdtCpt and NumCarte = (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) UNION select COMPTE.IdtCpt AS IdtCpt, COMPTE.NumCarte as NumCarte, COMPTE.Solde as Solde, COMPTE.TypeCompte as TypeCompte from COMPTE where (COMPTE.IdtCpt, (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) in (select IdCpt, NumCarte from BENEFICIAIRES);";
 
         static readonly string queryComptesCarte = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NumCarte=@Carte";
         static readonly string queryTransacCompte = "SELECT IdtTransaction, Horodatage, Montant, CptExpediteur, CptDestinataire, Statut FROM \"TRANSACTION\" WHERE Statut = 'O' AND (CptExpediteur=@IdtCptEx OR CptDestinataire=@IdtCptDest)";
@@ -34,8 +34,8 @@ namespace Or.Business
         static readonly string queryAddBeneficiaire = "INSERT INTO BENEFICIAIRES (IdCpt, NumCarte) values (@IdtCpt, @Carte);";
         static readonly string querySuppressionBeneficiaire = "DELETE from BENEFICIAIRES where IdCpt = @IdtCpt and NumCarte = @Carte ;";
         static readonly string queryBeneficiaireByIdtCpt = "select count(*) from BENEFICIAIRES where IdCpt = @IdCpt ;";
-        static readonly string queryComptesPossiblesByIdtCpt = "SELECT IdtCpt, NumCarte, Solde, TypeCompte from COMPTE where NumCarte is not  (select Numcarte from COMPTE where IdtCpt = @IdtCpt)";
-
+        static readonly string queryComptesPossiblesByIdtCpt = "SELECT COUNT(*) from COMPTE where NumCarte is not @numCarte and TypeCompte = \"Courant\" AND IdtCpt = @IdCpt and (@IdCpt, @numCarte) not in (select IdCpt, NumCarte from BENEFICIAIRES);";
+        // static readonly string queryEstBeneficiairePotentielByIdtCpt = "";
 
         /// <summary>
         /// Obtention des infos d'une carte
@@ -193,6 +193,7 @@ namespace Or.Business
                     }
                 }
             }
+
 
             return comptes;
         }
@@ -479,7 +480,7 @@ namespace Or.Business
 
 
         /// <summary>
-        /// Liste des beneficiaires associée a une carte 
+        /// Liste des beneficiaires associée a une carte
         /// </summary>
         /// <param name="NumCarte"></param>
         /// <returns></returns>
@@ -611,58 +612,34 @@ namespace Or.Business
 
 
         /// <summary>
-        /// Lister les beneficiaires associée à un compte
+        /// tester si un compte peux être un beneficiaire potentiel
         /// </summary>
         /// <param name="idtCpt"></param>
         /// <returns></returns>
-        public static bool EstBeneficiairePotentielByIdtCpt(int idtCpt)
+        public static bool EstBeneficiairePotentielByIdtCpt(int idtCpt, long numCarte)
         {
-            bool state = true;
-            List<Compte> comptes = new List<Compte>();
-
+            bool state = false;
             string connectionString = ConstructionConnexionString(fileDb);
 
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
 
-                using (var command = new SqliteCommand(queryBeneficiaireByIdtCpt, connection))
+                using (var command = new SqliteCommand(queryComptesPossiblesByIdtCpt, connection))
                 {
-                    command.Parameters.AddWithValue("@IdtCpt", idtCpt);
+                    command.Parameters.AddWithValue("@IdCpt", idtCpt);
+                    command.Parameters.AddWithValue("@numCarte", numCarte);
 
                     using (var reader = command.ExecuteReader())
                     {
                         reader.Read();
-                        state = reader.GetInt32(0) == 0;
-                    }
-                }
-
-                using (var command = new SqliteCommand(queryComptesPossiblesByIdtCpt, connection))
-                {
-                    command.Parameters.AddWithValue("@IdtCpt", idtCpt);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        int idt;
-                        long carte;
-                        decimal solde;
-                        string typeCompte;
-
-                        while (reader.Read())
-                        {
-                            idt = reader.GetInt32(0);
-                            carte = reader.GetInt64(1);
-                            solde = reader.GetDecimal(2);
-                            typeCompte = reader.GetString(3);
-
-                            Compte compte = new Compte(idt, carte, typeCompte == "Courant" ? TypeCompte.Courant : TypeCompte.Livret, solde);
-                            comptes.Add(compte);
-                        }
+                        state = (reader.GetInt32(0) == 1);
+                        
                     }
                 }
             }
 
-            return state && comptes.Find(cpt => cpt.Id == idtCpt) == null;
+            return state;
         }
 
 
