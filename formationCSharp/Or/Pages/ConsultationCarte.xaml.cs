@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -7,6 +8,9 @@ using System.Xml.Serialization;
 using Or.Business;
 using Or.Models;
 using Or.Serializeurs;
+using System.Xml;
+using System.Xml.Serialization;
+using System;
 
 namespace Or.Pages
 {
@@ -106,6 +110,111 @@ namespace Or.Pages
         void ExportComptes(object sender, RoutedEventArgs e)
         {
             SerialiserComptesTransaction(long.Parse(Numero.Text));
+        }
+
+        public ExportCompte DeSerialiserTransactions(string nomFichier)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ExportCompte));
+            // gérer les erreurs avant la fermeture.
+            FileStream fs = new FileStream(nomFichier, FileMode.Open);
+            XmlReader reader = XmlReader.Create(fs);
+            ExportCompte compte;
+            compte = (ExportCompte)serializer.Deserialize(reader);
+            fs.Close();
+            return compte;
+            
+        }
+
+        private static int CompareTransactions(Transaction t1, Transaction t2)
+        {
+            return t1.Horodatage.CompareTo(t2.Horodatage);
+        }
+
+        void ImportComptes(object sender, RoutedEventArgs e)
+        {
+            ExportCompte extractCompte = DeSerialiserTransactions("C:\\Users\\FORMATION\\Desktop\\comptes.xml");
+            List<Transaction> transactions = ExtractTransactionsDuComptes(extractCompte);
+            transactions.Sort(CompareTransactions);
+            TraitementTransactionsImportees(transactions);
+        }
+
+        private List<Transaction> ExtractTransactionsDuComptes(ExportCompte exportCompte)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            foreach (Compte compte in exportCompte.Comptes)
+            {
+                foreach (Transaction transaction in compte.Transactions.Transactions)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+            return transactions;
+        }
+
+        private void TraitementTransactionsImportees(List<Transaction> transactions)
+        {
+            Carte carte = SqlRequests.InfosCarte(long.Parse(Numero.Text));
+            foreach (Transaction t in transactions)
+            {
+                Compte ex = null;
+                Compte de = null;
+                Operation type;
+
+                if (t.Expediteur != 0)
+                {
+                    ex = SqlRequests.RetrouverUnCompteParId(t.Expediteur);
+                }
+                if (t.Destinataire != 0)
+                {
+                    de = SqlRequests.RetrouverUnCompteParId(t.Destinataire);
+                }
+
+                if (t.Expediteur != 0 && t.Destinataire != 0)
+                {
+                    type = Operation.InterCompte;
+                }
+                else if (t.Destinataire == 0)
+                {
+                    type = Operation.RetraitSimple;
+                }
+                else if (t.Expediteur == 0)
+                {
+                    type = Operation.DepotSimple;
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (type == Operation.InterCompte)
+                {
+                    CodeResultatTransaction resCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, de);
+                    bool retraitValide = ex.EstRetraitValide(t);
+                    if (retraitValide && resCarte == CodeResultatTransaction.Success)
+                    {
+                        SqlRequests.EffectuerModificationOperationInterCompte(t, ex.IdentifiantCarte, de.IdentifiantCarte);
+                    }
+                }
+                else if (type == Operation.DepotSimple)
+                {
+
+                    if (de.EstDepotValide(t))
+                    {
+                        SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
+
+                    }
+                }
+                else
+                {
+                    Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
+                    CodeResultatTransaction retourCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, compteBanque);
+                    CodeResultatTransaction retourCompte = ex.EstRetraitValide(t) ? CodeResultatTransaction.Success : CodeResultatTransaction.PlafondMaxAutoriseDepasse;
+                    if (retourCarte == CodeResultatTransaction.Success && retourCompte == CodeResultatTransaction.Success)
+                    {
+                        SqlRequests.EffectuerModificationOperationSimple(t, ex.Id);
+                    }
+                }
+            }
         }
 
     }

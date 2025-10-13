@@ -103,6 +103,7 @@
             <Button Content="Effectuer un Virement"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoVirement" />
             <Button Content="Liste Des Bénéficiaires"  Margin="0,0,0,8" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="GoBenef" />
         </StackPanel>
-        <Button Grid.Column="2" Content="Exporter Transactions" HorizontalAlignment="Center" Margin="0,110,0,0" Grid.Row="2" VerticalAlignment="Top" Height="34" Width="182" Click="ExportComptes"/>
+        <Button Grid.Column="2" Content="Exporter Transactions" HorizontalAlignment="Left" Margin="246,93,0,0" Grid.Row="2" VerticalAlignment="Top" Height="34" Width="182" Click="ExportComptes"/>
+        <Button Grid.Column="2" Content="Importer Transactions" HorizontalAlignment="Left" Margin="246,132,0,0" Grid.Row="2" VerticalAlignment="Top" Height="34" Width="182" Click="ImportComptes"/>
     </Grid>
 </PageFunction>

@@ -18,7 +18,10 @@ namespace Or.Models
         public long IdentifiantCarte { get; set; }
 
         [XmlElement("Type")]
-        public TypeCompte TypeDuCompte { get; set; }
+        public TypeCompte TypeDuCompte 
+        {
+            get;
+            set; }
 
 
         [XmlElement("Solde")]

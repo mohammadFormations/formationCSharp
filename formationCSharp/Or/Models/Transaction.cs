@@ -26,7 +26,10 @@ namespace Or.Models
             }
             set
             {
-
+                if (DateTime.TryParse(value, out DateTime horodatage))
+                {
+                    Horodatage = horodatage;
+                }
             }
         }
  
@@ -44,7 +47,14 @@ namespace Or.Models
                 if (Expediteur == 0) return null;
                 return Expediteur.ToString();
             }
-            set { }
+            set
+            {
+                if (value == null) return;
+                if (int.TryParse(value, out int expediteur))
+                {
+                    Expediteur = expediteur;
+                }
+            }
 
         }
 
@@ -59,7 +69,14 @@ namespace Or.Models
                 if (Destinataire == 0) return null;
                 return Destinataire.ToString();
             }
-            set { }
+            set
+            {
+                if (value == null) return;
+                if (int.TryParse(value, out int destinataire))
+                {
+                    Destinataire = destinataire;
+                }
+            }
         }
 
 
@@ -67,8 +84,28 @@ namespace Or.Models
         [XmlIgnore]
         public int Destinataire { get; set; }
 
-        [XmlElement("Montant")]
+        [XmlIgnore]
         public decimal Montant { get; set; }
+
+
+
+        [XmlElement("Montant")]
+        public string MontantStr
+        {
+            get
+            {
+                return Montant.ToString("C2");
+            }
+
+            set
+            {
+                if (value == null) Montant = 0;
+                if (decimal.TryParse(value.Replace(".", ",").Trim(new char[] { '€', ' ' }), out decimal montant))
+                {
+                    Montant = montant;
+                }
+            }
+        }
 
         public Transaction () { }
         public Transaction(int idTransaction, DateTime horodatage, decimal montant, int expediteur, int destinataire)

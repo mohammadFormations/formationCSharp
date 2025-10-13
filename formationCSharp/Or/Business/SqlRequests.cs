@@ -19,6 +19,9 @@ namespace Or.Business
         static readonly string queryComptesDispo = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE (NOT IdtCpt = @IdtCpt and NumCarte = (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) UNION select COMPTE.IdtCpt AS IdtCpt, COMPTE.NumCarte as NumCarte, COMPTE.Solde as Solde, COMPTE.TypeCompte as TypeCompte from COMPTE where (COMPTE.IdtCpt, (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) in (select IdCpt, NumCarte from BENEFICIAIRES);";
 
         static readonly string queryComptesCarte = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NumCarte=@Carte";
+        static readonly string queryCompteParId = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE IdtCpt=@IdtCpt";
+
+
         static readonly string queryTransacCompte = "SELECT IdtTransaction, Horodatage, Montant, CptExpediteur, CptDestinataire, Statut FROM \"TRANSACTION\" WHERE Statut = 'O' AND (CptExpediteur=@IdtCptEx OR CptDestinataire=@IdtCptDest)";
         static readonly string queryCarte = "SELECT NumCarte, PrenomClient, NomClient, PlafondRetrait from CARTE WHERE NumCarte=@Carte";
         static readonly string queryTransacCarte = "SELECT tr.IdtTransaction, tr.Horodatage, tr.Montant, tr.CptExpediteur, tr.CptDestinataire, tr.Statut FROM \"TRANSACTION\" tr INNER JOIN HISTTRANSACTION t ON t.IdtTransaction = tr.IdtTransaction WHERE tr.Statut = 'O' AND t.NumCarte=@Carte;";
@@ -33,7 +36,6 @@ namespace Or.Business
         static readonly string queryListeBeneficiairesAssocieClient = "select BENEFICIAIRES.IdCpt AS IdCpt, BENEFICIAIRES.NumCarte as NumCarte, CARTE.NomClient as nom, CARTE.PrenomClient as prenom from BENEFICIAIRES JOIN  COMPTE on COMPTE.IdtCpt = BENEFICIAIRES.IdCpt JOIN CARTE on Compte.NumCarte = CARTE.NumCarte where BENEFICIAIRES.NumCarte = @Carte order by IdCpt asc; ";
         static readonly string queryAddBeneficiaire = "INSERT INTO BENEFICIAIRES (IdCpt, NumCarte) values (@IdtCpt, @Carte);";
         static readonly string querySuppressionBeneficiaire = "DELETE from BENEFICIAIRES where IdCpt = @IdtCpt and NumCarte = @Carte ;";
-        static readonly string queryBeneficiaireByIdtCpt = "select count(*) from BENEFICIAIRES where IdCpt = @IdCpt ;";
         static readonly string queryComptesPossiblesByIdtCpt = "SELECT COUNT(*) from COMPTE where NumCarte is not @numCarte and TypeCompte = \"Courant\" AND IdtCpt = @IdCpt and (@IdCpt, @numCarte) not in (select IdCpt, NumCarte from BENEFICIAIRES);";
         // static readonly string queryEstBeneficiairePotentielByIdtCpt = "";
 
@@ -151,6 +153,50 @@ namespace Or.Business
             }
 
             return comptes;
+        }
+
+
+
+        /// <summary>
+        /// enqueter un compte en utilisant le id
+        /// </summary>
+        /// <param name="numCarte"></param>
+        /// <returns></returns>
+        public static Compte RetrouverUnCompteParId(int numCpt)
+        {
+            Compte compte = null;
+
+            string connectionString = ConstructionConnexionString(fileDb);
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqliteCommand(queryCompteParId, connection))
+                {
+                    command.Parameters.AddWithValue("@IdtCpt", numCpt);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        int idtCpt;
+                        long carte;
+                        decimal solde;
+                        string typeCompte;
+
+                        if (reader.Read())
+                        {
+                            idtCpt = reader.GetInt32(0);
+                            carte = reader.GetInt64(1);
+                            solde = reader.GetDecimal(2);
+                            typeCompte = reader.GetString(3);
+
+                            compte = new Compte(idtCpt, carte, typeCompte == "Courant" ? TypeCompte.Courant : TypeCompte.Livret, solde);
+                        }
+                    }
+                }
+            }
+
+            return compte;
         }
 
 
