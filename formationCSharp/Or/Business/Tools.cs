@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Or.Models;
+﻿using Or.Models;
 using System;
 using System.Globalization;
 

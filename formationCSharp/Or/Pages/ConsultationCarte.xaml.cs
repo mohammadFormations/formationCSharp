@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -9,8 +8,6 @@ using Or.Business;
 using Or.Models;
 using Or.Serializeurs;
 using System.Xml;
-using System.Xml.Serialization;
-using System;
 
 namespace Or.Pages
 {
