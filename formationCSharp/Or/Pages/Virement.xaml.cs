@@ -87,7 +87,10 @@ namespace Or.Pages
 
         private void Expediteur_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var viewDestinataire = CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispo((Expediteur.SelectedItem as Compte).Id));
+            var viewDestinataire = ((Expediteur.SelectedItem as Compte).TypeDuCompte == TypeCompte.Courant)
+                ? CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispo((Expediteur.SelectedItem as Compte).Id))
+                : CollectionViewSource.GetDefaultView(SqlRequests.ListeComptesDispoLivret((Expediteur.SelectedItem as Compte).Id));
+            
             viewDestinataire.GroupDescriptions.Add(new PropertyGroupDescription("IdentifiantCarte"));
             viewDestinataire.SortDescriptions.Add(new SortDescription("IdentifiantCarte", ListSortDirection.Descending));
             viewDestinataire.SortDescriptions.Add(new SortDescription("TypeDuCompte", ListSortDirection.Ascending));

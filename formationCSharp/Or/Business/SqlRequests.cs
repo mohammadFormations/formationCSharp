@@ -11,6 +11,7 @@ namespace Or.Business
         static readonly string fileDb = "BaseAppBancaire.db";
 
         static readonly string queryComptesDispo = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE (NOT IdtCpt = @IdtCpt and NumCarte = (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) UNION select COMPTE.IdtCpt AS IdtCpt, COMPTE.NumCarte as NumCarte, COMPTE.Solde as Solde, COMPTE.TypeCompte as TypeCompte from COMPTE where (COMPTE.IdtCpt, (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) in (select IdCpt, NumCarte from BENEFICIAIRES);";
+        static readonly string queryComptesDispoLivret = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE (NOT IdtCpt = @IdtCpt and NumCarte = (select COMPTE.NumCarte FROM COMPTE WHERE COMPTE.IdtCpt = @IdtCpt)) and TypeCompte != \"Livret\"";
 
         static readonly string queryComptesCarte = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE NumCarte=@Carte";
         static readonly string queryCompteParId = "SELECT IdtCpt, NumCarte, Solde, TypeCompte FROM COMPTE WHERE IdtCpt=@IdtCpt";
@@ -236,6 +237,53 @@ namespace Or.Business
 
             return comptes;
         }
+
+
+        /// <summary>
+        /// Liste des comptes associés dispos pour un virement provenent d'un livret
+        /// </summary>
+        /// <param name="idtCpt"></param>
+        /// <returns></returns>
+        public static List<Compte> ListeComptesDispoLivret(int idtCpt)
+        {
+            List<Compte> comptes = new List<Compte>();
+
+            string connectionString = ConstructionConnexionString(fileDb);
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqliteCommand(queryComptesDispoLivret, connection))
+                {
+                    command.Parameters.AddWithValue("@IdtCpt", idtCpt);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        int idt;
+                        long carte;
+                        decimal solde;
+                        string typeCompte;
+
+                        while (reader.Read())
+                        {
+                            idt = reader.GetInt32(0);
+                            carte = reader.GetInt64(1);
+                            solde = reader.GetDecimal(2);
+                            typeCompte = reader.GetString(3);
+
+                            Compte compte = new Compte(idt, carte, typeCompte == "Courant" ? TypeCompte.Courant : TypeCompte.Livret, solde);
+                            comptes.Add(compte);
+                        }
+                    }
+                }
+            }
+
+
+            return comptes;
+        }
+
+
 
         /// <summary>
         /// Liste des transactions associées à une carte donnée

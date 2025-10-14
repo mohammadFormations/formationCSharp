@@ -83,6 +83,11 @@ namespace Or.Business
             }
         }
 
+        /// <summary>
+        /// appliquer une transaction si elle vérifie toutes les conditions
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="carte"></param>
         public static void AppliquerUneTransaction(Transaction t, Carte carte)
         {
             Compte ex = null;
@@ -124,6 +129,13 @@ namespace Or.Business
 
         }
 
+        /// <summary>
+        /// effectuer un virement
+        /// </summary>
+        /// <param name="carte"></param>
+        /// <param name="t"></param>
+        /// <param name="ex"></param>
+        /// <param name="de"></param>
         private static void GererUnVirement(Carte carte, Transaction t, Compte ex, Compte de)
         {
             CodeResultatTransaction resCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, de);
@@ -134,6 +146,11 @@ namespace Or.Business
             }
         }
 
+        /// <summary>
+        /// effectuer un depot
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="de"></param>
         private static void GererUnDepot(Transaction t, Compte de)
         {
             if (de.EstDepotValide(t))
@@ -143,6 +160,13 @@ namespace Or.Business
             }
         }
 
+        /// <summary>
+        /// effectuer un retrait
+        /// </summary>
+        /// <param name="carte"></param>
+        /// <param name="t"></param>
+        /// <param name="ex"></param>
+        /// <param name="de"></param>
         private static void GererRetrait(Carte carte, Transaction t, Compte ex, Compte de)
         {
             Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
