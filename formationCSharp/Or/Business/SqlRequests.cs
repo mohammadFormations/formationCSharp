@@ -1,14 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using Or.Models;
-using Or.Pages;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Or.Business
 {
@@ -36,8 +30,7 @@ namespace Or.Business
         static readonly string queryListeBeneficiairesAssocieClient = "select BENEFICIAIRES.IdCpt AS IdCpt, BENEFICIAIRES.NumCarte as NumCarte, CARTE.NomClient as nom, CARTE.PrenomClient as prenom from BENEFICIAIRES JOIN  COMPTE on COMPTE.IdtCpt = BENEFICIAIRES.IdCpt JOIN CARTE on Compte.NumCarte = CARTE.NumCarte where BENEFICIAIRES.NumCarte = @Carte order by IdCpt asc; ";
         static readonly string queryAddBeneficiaire = "INSERT INTO BENEFICIAIRES (IdCpt, NumCarte) values (@IdtCpt, @Carte);";
         static readonly string querySuppressionBeneficiaire = "DELETE from BENEFICIAIRES where IdCpt = @IdtCpt and NumCarte = @Carte ;";
-        static readonly string queryComptesPossiblesByIdtCpt = "SELECT COUNT(*) from COMPTE where NumCarte is not @numCarte and TypeCompte = \"Courant\" AND IdtCpt = @IdCpt and (@IdCpt, @numCarte) not in (select IdCpt, NumCarte from BENEFICIAIRES);";
-        // static readonly string queryEstBeneficiairePotentielByIdtCpt = "";
+        static readonly string queryBeneficiairePossiblesByIdtCpt = "SELECT COUNT(*) from COMPTE where NumCarte is not @numCarte and TypeCompte = \"Courant\" AND IdtCpt = @IdCpt and (@IdCpt, @numCarte) not in (select IdCpt, NumCarte from BENEFICIAIRES);";
 
         /// <summary>
         /// Obtention des infos d'une carte
@@ -471,58 +464,6 @@ namespace Or.Business
             return true;
         }
 
-        private static string ConstructionConnexionString(string fileDb)
-        {
-            string dossierRef = Directory.GetCurrentDirectory();
-            string dossierProjet = Path.GetFullPath(Path.Combine(dossierRef, @"..\..\.."));
-
-            string chemin = Path.Combine(dossierProjet, fileDb);
-            return "Data Source=" + chemin;
-        }
-
-        private static SqliteCommand ConstructionInsertionTransaction(SqliteConnection connection, Transaction trans)
-        {
-            // Insertion de la transaction
-            var insertTransac = connection.CreateCommand();
-            insertTransac.CommandText = queryInsertTransac;
-
-            insertTransac.Parameters.AddWithValue("@Horodatage", trans.Horodatage.ToString("dd/MM/yyyy hh:mm:ss"));
-            insertTransac.Parameters.AddWithValue("@Montant", trans.Montant);
-            insertTransac.Parameters.AddWithValue("@CptExp", trans.Expediteur);
-            insertTransac.Parameters.AddWithValue("@CptDest", trans.Destinataire);
-            
-            return insertTransac;
-        }
-
-        private static SqliteCommand ConstructionInsertionHistTransaction(SqliteConnection connection, int idtTrans, long numCarte)
-        {
-            // Insertion de la transaction
-            var insertHistTransac = connection.CreateCommand();
-            insertHistTransac.CommandText = queryInsertHistTransac;
-
-            insertHistTransac.Parameters.AddWithValue("@IdtTrans", idtTrans);
-            insertHistTransac.Parameters.AddWithValue("@Carte", numCarte);
-
-            return insertHistTransac;
-        }
-
-        /// <summary>
-        /// COnstruction de la commande de mise à jour du solde du compte
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="idtCpt"></param>
-        /// <param name="montant">Montant à soustraire au solde</param>
-        /// <returns></returns>
-        private static SqliteCommand ConstructionUpdateSolde(SqliteConnection connection, int idtCpt, decimal montant)
-        {
-            // Mise à jour du solde du compte
-            var updateCompte = connection.CreateCommand();
-            updateCompte.CommandText = queryUpdateCompte;
-            updateCompte.Parameters.AddWithValue("@Montant", montant);
-            updateCompte.Parameters.AddWithValue("@IdtCompte", idtCpt);
-
-            return updateCompte;
-        }
 
 
         /// <summary>
@@ -530,7 +471,7 @@ namespace Or.Business
         /// </summary>
         /// <param name="NumCarte"></param>
         /// <returns></returns>
-        public static List<Beneficiaire> ListeBeneficiairesAssocieClient(long  NumCarte)
+        public static List<Beneficiaire> ListeBeneficiairesAssocieClient(long NumCarte)
         {
             List<Beneficiaire> beneficiaires = new List<Beneficiaire>();
 
@@ -610,6 +551,7 @@ namespace Or.Business
             return true;
         }
 
+
         /// <summary>
         /// Suppresion de beneficiaire
         /// </summary>
@@ -655,10 +597,8 @@ namespace Or.Business
         }
 
 
-
-
         /// <summary>
-        /// tester si un compte peux être un beneficiaire potentiel
+        /// tester si un compte peux être un beneficiaire potentiel d'une carte.
         /// </summary>
         /// <param name="idtCpt"></param>
         /// <returns></returns>
@@ -671,7 +611,7 @@ namespace Or.Business
             {
                 connection.Open();
 
-                using (var command = new SqliteCommand(queryComptesPossiblesByIdtCpt, connection))
+                using (var command = new SqliteCommand(queryBeneficiairePossiblesByIdtCpt, connection))
                 {
                     command.Parameters.AddWithValue("@IdCpt", idtCpt);
                     command.Parameters.AddWithValue("@numCarte", numCarte);
@@ -680,7 +620,7 @@ namespace Or.Business
                     {
                         reader.Read();
                         state = (reader.GetInt32(0) == 1);
-                        
+
                     }
                 }
             }
@@ -689,7 +629,61 @@ namespace Or.Business
         }
 
 
+        private static string ConstructionConnexionString(string fileDb)
+        {
+            string dossierRef = Directory.GetCurrentDirectory();
+            string dossierProjet = Path.GetFullPath(Path.Combine(dossierRef, @"..\..\.."));
 
+            string chemin = Path.Combine(dossierProjet, fileDb);
+            return "Data Source=" + chemin;
+        }
+
+
+        private static SqliteCommand ConstructionInsertionTransaction(SqliteConnection connection, Transaction trans)
+        {
+            // Insertion de la transaction
+            var insertTransac = connection.CreateCommand();
+            insertTransac.CommandText = queryInsertTransac;
+
+            insertTransac.Parameters.AddWithValue("@Horodatage", trans.Horodatage.ToString("dd/MM/yyyy hh:mm:ss"));
+            insertTransac.Parameters.AddWithValue("@Montant", trans.Montant);
+            insertTransac.Parameters.AddWithValue("@CptExp", trans.Expediteur);
+            insertTransac.Parameters.AddWithValue("@CptDest", trans.Destinataire);
+            
+            return insertTransac;
+        }
+
+
+        private static SqliteCommand ConstructionInsertionHistTransaction(SqliteConnection connection, int idtTrans, long numCarte)
+        {
+            // Insertion de la transaction
+            var insertHistTransac = connection.CreateCommand();
+            insertHistTransac.CommandText = queryInsertHistTransac;
+
+            insertHistTransac.Parameters.AddWithValue("@IdtTrans", idtTrans);
+            insertHistTransac.Parameters.AddWithValue("@Carte", numCarte);
+
+            return insertHistTransac;
+        }
+
+
+        /// <summary>
+        /// COnstruction de la commande de mise à jour du solde du compte
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="idtCpt"></param>
+        /// <param name="montant">Montant à soustraire au solde</param>
+        /// <returns></returns>
+        private static SqliteCommand ConstructionUpdateSolde(SqliteConnection connection, int idtCpt, decimal montant)
+        {
+            // Mise à jour du solde du compte
+            var updateCompte = connection.CreateCommand();
+            updateCompte.CommandText = queryUpdateCompte;
+            updateCompte.Parameters.AddWithValue("@Montant", montant);
+            updateCompte.Parameters.AddWithValue("@IdtCompte", idtCpt);
+
+            return updateCompte;
+        }
 
     }
 }

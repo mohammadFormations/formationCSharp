@@ -151,69 +151,17 @@ namespace Or.Pages
             return transactions;
         }
 
+        /// <summary>
+        /// Iteration sur toutes les transactions et appliquer celle qui sont acceptables selon les
+        /// conditions de business.
+        /// </summary>
+        /// <param name="transactions"></param>
         private void TraitementTransactionsImportees(List<Transaction> transactions)
         {
             Carte carte = SqlRequests.InfosCarte(long.Parse(Numero.Text));
             foreach (Transaction t in transactions)
             {
-                Compte ex = null;
-                Compte de = null;
-                Operation type;
-
-                if (t.Expediteur != 0)
-                {
-                    ex = SqlRequests.RetrouverUnCompteParId(t.Expediteur);
-                }
-                if (t.Destinataire != 0)
-                {
-                    de = SqlRequests.RetrouverUnCompteParId(t.Destinataire);
-                }
-
-                if (t.Expediteur != 0 && t.Destinataire != 0)
-                {
-                    type = Operation.InterCompte;
-                }
-                else if (t.Destinataire == 0)
-                {
-                    type = Operation.RetraitSimple;
-                }
-                else if (t.Expediteur == 0)
-                {
-                    type = Operation.DepotSimple;
-                }
-                else
-                {
-                    continue;
-                }
-
-                if (type == Operation.InterCompte)
-                {
-                    CodeResultatTransaction resCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, de);
-                    bool retraitValide = ex.EstRetraitValide(t);
-                    if (retraitValide && resCarte == CodeResultatTransaction.Success)
-                    {
-                        SqlRequests.EffectuerModificationOperationInterCompte(t, ex.IdentifiantCarte, de.IdentifiantCarte);
-                    }
-                }
-                else if (type == Operation.DepotSimple)
-                {
-
-                    if (de.EstDepotValide(t))
-                    {
-                        SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
-
-                    }
-                }
-                else
-                {
-                    Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
-                    CodeResultatTransaction retourCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, compteBanque);
-                    CodeResultatTransaction retourCompte = ex.EstRetraitValide(t) ? CodeResultatTransaction.Success : CodeResultatTransaction.PlafondMaxAutoriseDepasse;
-                    if (retourCarte == CodeResultatTransaction.Success && retourCompte == CodeResultatTransaction.Success)
-                    {
-                        SqlRequests.EffectuerModificationOperationSimple(t, ex.Id);
-                    }
-                }
+                Tools.AppliquerUneTransaction(t, carte);
             }
         }
 

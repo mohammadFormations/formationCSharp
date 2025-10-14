@@ -1,11 +1,7 @@
-﻿using Or.Models;
+﻿using MaterialDesignThemes.Wpf;
+using Or.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Or.Business
 {
@@ -86,5 +82,77 @@ namespace Or.Business
                     throw new NotImplementedException();
             }
         }
+
+        public static void AppliquerUneTransaction(Transaction t, Carte carte)
+        {
+            Compte ex = null;
+            Compte de = null;
+            Operation type;
+
+            if (t.Expediteur != 0)
+            {
+                ex = SqlRequests.RetrouverUnCompteParId(t.Expediteur);
+            }
+            if (t.Destinataire != 0)
+            {
+                de = SqlRequests.RetrouverUnCompteParId(t.Destinataire);
+            }
+
+
+            // ne rien faire si le titulaire de la carte
+            // n'est ni le destinataire, ni l'expediteur.
+            if (carte.Id != ex?.IdentifiantCarte && carte.Id != de?.IdentifiantCarte)
+            {
+                return;
+            }
+
+            type = TypeTransaction(t.Expediteur, t.Destinataire);
+
+            if (type == Operation.InterCompte)
+            {
+                GererUnVirement(carte, t, ex, de);
+            }
+            else if (type == Operation.DepotSimple)
+            {
+
+                GererUnDepot(t, de);
+            }
+            else
+            {
+                GererRetrait(carte, t, ex, de);
+            }
+
+        }
+
+        private static void GererUnVirement(Carte carte, Transaction t, Compte ex, Compte de)
+        {
+            CodeResultatTransaction resCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, de);
+            bool retraitValide = ex.EstRetraitValide(t);
+            if (retraitValide && resCarte == CodeResultatTransaction.Success)
+            {
+                SqlRequests.EffectuerModificationOperationInterCompte(t, ex.IdentifiantCarte, de.IdentifiantCarte);
+            }
+        }
+
+        private static void GererUnDepot(Transaction t, Compte de)
+        {
+            if (de.EstDepotValide(t))
+            {
+                SqlRequests.EffectuerModificationOperationSimple(t, de.IdentifiantCarte);
+
+            }
+        }
+
+        private static void GererRetrait(Carte carte, Transaction t, Compte ex, Compte de)
+        {
+            Compte compteBanque = new Compte(0, 0, TypeCompte.Courant, 0);
+            CodeResultatTransaction retourCarte = carte.EstRetraitAutoriseNiveauCarte(t, ex, compteBanque);
+            CodeResultatTransaction retourCompte = ex.EstRetraitValide(t) ? CodeResultatTransaction.Success : CodeResultatTransaction.PlafondMaxAutoriseDepasse;
+            if (retourCarte == CodeResultatTransaction.Success && retourCompte == CodeResultatTransaction.Success)
+            {
+                SqlRequests.EffectuerModificationOperationSimple(t, ex.Id);
+            }
+        }
+
     }
 }
