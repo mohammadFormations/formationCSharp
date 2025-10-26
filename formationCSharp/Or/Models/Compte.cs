@@ -15,6 +15,7 @@ namespace Or.Models
 
         [XmlElement("Identifiant")]
         public int Id { get; set; }
+        [XmlIgnore]
         public long IdentifiantCarte { get; set; }
 
         [XmlElement("Type")]
@@ -24,8 +25,26 @@ namespace Or.Models
             set; }
 
 
-        [XmlElement("Solde")]
+        [XmlIgnore]
         public decimal Solde { get; set; }
+
+        [XmlElement("Solde")]
+        public string SoldeStr
+        {
+            get
+            {
+                return Solde.ToString("C2");
+            }
+
+            set
+            {
+                if (value == null) Solde = 0;
+                if (decimal.TryParse(value.Replace(".", ",").Trim(new char[] { '€', ' ' }), out decimal montant))
+                {
+                    Solde = montant;
+                }
+            }
+        }
 
 
         [XmlElement("Transactions")]

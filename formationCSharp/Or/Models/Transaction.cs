@@ -9,14 +9,14 @@ namespace Or.Models
     public class Transaction
     {
 
-        [XmlElement("Identifiant")]
+        [XmlElement("Identifiant", Order = 0)]
         public int IdTransaction { get; set; }
 
 
         [XmlIgnore]
         public DateTime Horodatage { get; set; }
 
-        [XmlElement("Date")]
+        [XmlElement("Date", Order = 1)]
 
         public string Date
         {
@@ -34,11 +34,11 @@ namespace Or.Models
         }
  
 
-        [XmlElement("Type")]
+        [XmlElement("Operation", Order = 5)]
         public string TypeTransactionstringifie { get; set; }
 
 
-        [XmlElement("CompteExpediteur")]
+        [XmlElement("CompteExpediteur", Order = 3)]
         public string CompteExpediteur
         {
             get
@@ -61,7 +61,7 @@ namespace Or.Models
         [XmlIgnore]
         public int Expediteur { get; set; }
 
-        [XmlElement("CompteDestinataire")]
+        [XmlElement("CompteDestinataire", Order = 4)]
         public string CompteDestinataire
         {
             get
@@ -89,7 +89,7 @@ namespace Or.Models
 
 
 
-        [XmlElement("Montant")]
+        [XmlElement("Montant", Order = 2)]
         public string MontantStr
         {
             get

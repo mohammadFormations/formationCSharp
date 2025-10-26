@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Or.Serializeurs
 {
-    [XmlRoot]
+    [XmlType("Comptes")]
     public class ExportCompte
     {
 
@@ -12,8 +12,7 @@ namespace Or.Serializeurs
 
         //[XmlElement("Comptes")]
 
-        [XmlArray("Comptes")]
-        [XmlArrayItem("Compte", typeof(Compte))]
+        [XmlElement("Compte", typeof(Compte))]
         public List<Compte> Comptes { get; set; }
     }
 }
