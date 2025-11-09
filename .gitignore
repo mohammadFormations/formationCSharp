@@ -6,7 +6,7 @@
 ## has more thorough IDE-specific entries.
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
-
+*/packages/*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -29,6 +29,7 @@ project.fragment.lock.json
 artifacts/
 
 .vs/
+*/.vs
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt

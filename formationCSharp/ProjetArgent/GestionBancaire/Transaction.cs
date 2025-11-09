@@ -1,0 +1,23 @@
+﻿using System;
+
+namespace ProjetArgent.GestionBancaire
+{
+    public class Transaction
+    {
+        public int NumTransaction;
+        public int ExpediteurId;
+        public int DestinateurId;
+
+        public decimal Montant { get; private set; }
+        public DateTime Horodatage { get; private set; }
+
+        public Transaction(int numTransaction, DateTime horodatage, decimal montant, int expediteurId, int destinateurId)
+        {
+            NumTransaction = numTransaction;
+            this.Horodatage = horodatage;
+            Montant = montant;
+            ExpediteurId = expediteurId;
+            DestinateurId = destinateurId;
+        }
+    }
+}
